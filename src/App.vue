@@ -1,21 +1,51 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+  <component :is="layout">
+    <template #sider>
+      <div class="header-channel-list">
+        <span>Chat nội bộ</span>
+        <bell-outlined style="font-size: 24px; color: #009149"></bell-outlined>
+      </div>
+      <channel></channel>
+    </template>
+    <template #chat>
+        <router-view></router-view>
+    </template>
+  </component>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<script>
+import Chat from "./pages/chat.vue";
+import Message from "./layouts/message.vue";
+import Channel from "./components/Channel.vue";
+import {
+  BellOutlined,
+  EllipsisOutlined,
+  PieChartOutlined,
+  DesktopOutlined,
+  UserOutlined,
+  TeamOutlined,
+  FileOutlined,
+} from "@ant-design/icons-vue";
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  components: {
+    BellOutlined,
+    EllipsisOutlined,
+    PieChartOutlined,
+    DesktopOutlined,
+    UserOutlined,
+    TeamOutlined,
+    FileOutlined,
+    Channel,
+    Message,
+    Chat,
+  },
+
+  data() {
+    return {
+      layout: "message",
+    };
+  },
+});
+</script>
