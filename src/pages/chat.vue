@@ -14,13 +14,16 @@
   </a-layout-header>
   <a-layout-content>
     <div :style="{ padding: '24px', background: '#fff', height: '100vh' }">
-      {{$route.params.id}}
+      {{ $route.params.id }}
     </div>
   </a-layout-content>
 </template>
 
 <script>
-  export default {
-    
-  }
+import { EllipsisOutlined } from "@ant-design/icons-vue";
+export default {
+  components: {
+    EllipsisOutlined,
+  },
+};
 </script>

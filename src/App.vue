@@ -8,44 +8,34 @@
       <channel></channel>
     </template>
     <template #chat>
-        <router-view></router-view>
+      <router-view></router-view>
     </template>
   </component>
 </template>
 
 <script>
-import Chat from "./pages/chat.vue";
 import Message from "./layouts/message.vue";
 import Channel from "./components/Channel.vue";
-import {
-  BellOutlined,
-  EllipsisOutlined,
-  PieChartOutlined,
-  DesktopOutlined,
-  UserOutlined,
-  TeamOutlined,
-  FileOutlined,
-} from "@ant-design/icons-vue";
+import { BellOutlined } from "@ant-design/icons-vue";
 import { defineComponent } from "vue";
-
+import {useStore} from "pinia"
 export default defineComponent({
   components: {
     BellOutlined,
-    EllipsisOutlined,
-    PieChartOutlined,
-    DesktopOutlined,
-    UserOutlined,
-    TeamOutlined,
-    FileOutlined,
     Channel,
     Message,
-    Chat,
   },
 
   data() {
     return {
       layout: "message",
     };
+  },
+
+  setup() {
+    const store = useStore()
+    store.fetchUserPreferences();
+    console.log("Starting message");
   },
 });
 </script>
