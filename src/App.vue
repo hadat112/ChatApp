@@ -17,8 +17,7 @@
 import Message from "./layouts/message.vue";
 import Channel from "./components/Channel.vue";
 import { BellOutlined } from "@ant-design/icons-vue";
-import { defineComponent } from "vue";
-import {useStore} from "pinia"
+import { defineComponent, onMounted } from "vue";
 export default defineComponent({
   components: {
     BellOutlined,
@@ -33,9 +32,22 @@ export default defineComponent({
   },
 
   setup() {
-    const store = useStore()
-    store.fetchUserPreferences();
-    console.log("Starting message");
+    
   },
 });
 </script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html, body {margin: 0; height: 100%; overflow: hidden}
+
+body {
+  padding: 0;
+  font-family: Helvetica Neue,Segoe UI,Helvetica,Arial,sans-serif!important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+</style>

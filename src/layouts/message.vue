@@ -17,13 +17,13 @@ export default {
 </script>
 
 <style>
-html, body {
-  height: 100%
-}
 
 .ant-layout-sider-children {
   background-color: #fff;
-  border-right: 2px solid #efefef;
+}
+
+.ant-layout-sider{
+    border-right: 2px solid #efefef;
 }
 
 ul.ant-list-items {
@@ -41,7 +41,6 @@ li.ant-list-item {
 
 .ant-layout-content {
   height: 100vh;
-  border-top: 2px solid #efefef;
 }
 
 .header-channel-list {
