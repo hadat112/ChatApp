@@ -1,0 +1,256 @@
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #E0DFDF;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    padding: 0;
+    font-family: Helvetica Neue, Segoe UI, Helvetica, Arial, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+    height: 100%;
+}
+
+/* sider */
+.ant-layout {
+    height: 100%;
+}
+
+.ant-layout-sider {
+    border-right: 2px solid #efefef;
+}
+
+.ant-layout-sider-children {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-channel-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 91.5%;
+}
+
+.channel-input-search {
+    margin: 0 8px 8px 8px;
+    height: 44px;
+}
+
+.channel-input-search input {
+    border: none;
+    border-radius: 10px;
+    background-color: #f4f4f4;
+    height: inherit;
+    padding: 8px;
+    width: 100%;
+}
+
+.channel-list-wrapper {
+    overflow-y: scroll;
+}
+
+.channel-list-item {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid hsla(0, 0%, 91%, .4588235294117647);
+}
+
+.channel-list-item:hover {
+    background-color: #F1FAFE;
+}
+
+.channel-list-item.active {
+    background-color: #E4F5FE;
+}
+
+.channel-avatar-container {
+    min-width: 15%;
+    max-width: 15%;
+    height: 100%;
+}
+
+.channel-avatar {
+    border-radius: 50%;
+    height: 52px;
+    width: 52px;
+    background-size: cover;
+    flex: 1;
+}
+
+.channel-content {
+    display: flex;
+    padding-left: 10px;
+    flex-direction: column;
+    width: 85%;
+}
+
+.channel-name {
+    color: #000;
+    font-weight: 400;
+    font-size: 16px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.channel-last-msg {
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+}
+
+.channel-text {
+    font-size: 14px;
+    max-width: 180px;
+    height: 24px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.channel-time {
+    font-size: 13px;
+}
+
+/* chat-view */
+.ant-layout {
+    height: 100%;
+}
+
+.chat-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.loading :not(:first-child) {
+    opacity: 0.5;
+}
+
+.loading {
+    position: relative;
+
+}
+
+.chat-spinner {
+    opacity: 1;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+}
+
+i.ant-spin-dot-item {
+    background-color: #14a05b;
+}
+
+.ant-page-header {
+    padding: 0 20px;
+    border-bottom: 1px solid rgb(235, 237, 240);
+}
+
+.ant-layout-content {
+    overflow-y: scroll;
+    background-color: #fff;
+}
+
+.message-container {
+    display: flex;
+    margin-top: 8px;
+}
+
+.message-avt-container {
+    margin: 9px 12px 0 0;
+}
+
+
+.message-avt {
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+    background-size: cover;
+    flex: 1;
+}
+
+.message-content {
+    width: 60%;
+    margin: 2px 0 0 0;
+}
+
+.message-sender {
+    color: #676767;
+    font-size: 12px;
+}
+
+
+.message-text {
+    background-color: #F0EFF4;
+    border-radius: 10px;
+    padding: 6px 12px;
+    width: fit-content;
+    word-wrap: break-word;
+}
+
+.ant-layout-footer {
+    background-color: #fff;
+    border-top: 1px solid rgb(235, 237, 240);
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 24px;
+}
+
+.ant-layout-footer input {
+    background-color: #f5f4f4;
+    border: none;
+    border-radius: 40px;
+    padding: 12px 15px;
+    width: 90%;
+    height: auto;
+}
+
+.ant-layout-footer input:focus {
+    outline: none;
+}
+
+.ant-layout-footer .send-btn {
+    background-color: transparent;
+    border: none;
+    border-radius: 40px;
+    font-size: x-large;
+    color: rgb(204, 204, 204)
+}
+
+.send-btn.active {
+    color: rgb(65, 155, 98) !important;
+}

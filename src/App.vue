@@ -36,18 +36,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-html, body {margin: 0; height: 100%; overflow: hidden}
-
-body {
-  padding: 0;
-  font-family: Helvetica Neue,Segoe UI,Helvetica,Arial,sans-serif!important;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-</style>

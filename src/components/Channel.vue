@@ -5,7 +5,7 @@
     </div>
     <div class="channel-list-wrapper">
       <div v-for="(item, index) in channelList.data" :key="index" class="">
-        <router-link :to="`${item.channel_id}`" class="channel-list-item" :class="{active: item.channel_id === $route.params.id}">
+        <router-link :to="`${item.channel_id}`" :key="$route.fullPath" class="channel-list-item" :class="{active: item.channel_id === $route.params.id}">
           <div class="channel-avatar-container">
             <div
               :style="`background-image: url(${
@@ -70,106 +70,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.container {
-  width: 100%;
-  height: 100%;
-}
-
-.channel-list-wrapper {
-  overflow-y: scroll;
-  height: 80%;
-  position: relative;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: transparent; 
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #E0DFDF;
-}
-
-.channel-list-item {
-  display: flex;
-  padding: 10px;
-  border-top: 1px solid hsla(0,0%,91%,.4588235294117647);
-}
-
-.channel-list-item:hover {
-  background-color: #F1FAFE;
-}
-
-.active {
-  background-color: #E4F5FE;
-}
-
-.channel-avatar-container {
-  min-width: 15%;
-  max-width: 15%;
-  height: 100%;
-}
-
-.channel-avatar {
-  border-radius: 50%;
-  height: 52px;
-  width: 52px;
-  background-size: cover;
-  flex: 1;
-}
-
-.channel-content {
-  display: flex;
-  padding-left: 10px;
-  flex-direction: column;
-  width: 85%;
-}
-
-.channel-name {
-  color: #000;
-  font-weight: 400;
-  font-size: 16px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.channel-last-msg {
-  color: #666;
-  display: flex;
-  justify-content: space-between;
-}
-
-.channel-text {
-  font-size: 14px;
-  max-width: 180px;
-  height: 24px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.channel-time {
-  font-size: 13px;
-}
-
-.channel-input-search {
-  margin: 0 8px 8px 8px;
-  height: 44px;
-}
-
-.channel-input-search input {
-  border: none;
-  border-radius: 10px;
-  background-color: #f4f4f4;
-  height: inherit;
-  padding: 8px;
-  width: 100%;
-}
-</style>
