@@ -10,10 +10,13 @@
       <div class="channel-info-btn"></div>
     </a-layout-header>
     <a-layout-content>
-      <div :style="{ padding: '24px', background: '#fff', height: '100vh' }">
+      <div :style="{ background: '#fff' }">
         <div
+          id="message-container"
           class="message-container"
-          v-for="(item, index) in messageList.data"
+          v-for="(item, index) in messageList.data
+            ? messageList.data.slice().reverse()
+            : []"
           :key="index"
         >
           <div class="message-avt-container">
@@ -34,8 +37,16 @@
       </div>
     </a-layout-content>
     <a-layout-footer>
-      <input type="text" placeholder="Nhập nội dung tin nhắn" name="" v-model="messageInput" />
-      <button class="send-btn" :class="{active: messageInput}">
+      <div class="message-more">
+        <ellipsis-outlined />
+      </div>
+      <input
+        type="text"
+        placeholder="Nhập nội dung tin nhắn"
+        name=""
+        v-model="messageInput"
+      />
+      <button class="send-btn" :class="{ active: messageInput }">
         <send-outlined />
       </button>
     </a-layout-footer>
@@ -44,16 +55,21 @@
 </template>
 
 <script>
-import { EllipsisOutlined, SendOutlined } from "@ant-design/icons-vue";
+import {
+  EllipsisOutlined,
+  SendOutlined,
+  MoreOutlined,
+} from "@ant-design/icons-vue";
 import { useMessageStore } from "../stores/message-list.js";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 export default {
   components: {
     EllipsisOutlined,
     SendOutlined,
+    MoreOutlined,
   },
   setup() {
     let messageInput = ref("");
@@ -62,7 +78,24 @@ export default {
     const { fetchMessage } = useMessageStore();
     let channelID = route.params.id;
     fetchMessage(channelID, 40);
+    onMounted(() => {
+      function overflowDetector(x) {
+        return x.style.overflow;
+      }
+
+      console.log("overflowDetector: " +        document.querySelector('#message-container'));
+
+      // var overflow = overflowDetector(
+      //   document.querySelector("#message-container")
+      // );
+      // if (overflow === "scroll") {
+      //   alert("overflow : scroll");
+      // } else {
+      //   alert("overflow : " + overflow);
+      // }
+    });
     return { messageList, loading, messageInput };
   },
+
 };
 </script>

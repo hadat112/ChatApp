@@ -3,7 +3,7 @@
     <template #sider>
       <div class="header-channel-list">
         <span>Chat nội bộ</span>
-        <bell-outlined style="font-size: 24px; color: #009149"></bell-outlined>
+        <bell-outlined style="font-size: 20px; color: #009149"></bell-outlined>
       </div>
       <channel></channel>
     </template>

@@ -152,6 +152,7 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
+    background-color: #fff;
 }
 
 .loading :not(:first-child) {
@@ -181,13 +182,16 @@ i.ant-spin-dot-item {
 }
 
 .ant-layout-content {
-    overflow-y: scroll;
+    overflow: scroll;
     background-color: #fff;
+    display: flex;
+    flex-direction: column-reverse;
+    margin-bottom: 24px;
 }
 
 .message-container {
     display: flex;
-    margin-top: 8px;
+    margin: 8px 0 0 24px;
 }
 
 .message-avt-container {
@@ -217,17 +221,27 @@ i.ant-spin-dot-item {
 .message-text {
     background-color: #F0EFF4;
     border-radius: 10px;
+    max-width: 100%;
     padding: 6px 12px;
     width: fit-content;
     word-wrap: break-word;
 }
 
 .ant-layout-footer {
+    align-items: center;
     background-color: #fff;
     border-top: 1px solid rgb(235, 237, 240);
     display: flex;
     justify-content: space-between;
     padding: 6px 24px;
+}
+
+.ant-layout-footer .message-more {
+    background-color: transparent;
+    border: none;
+    border-radius: 40px;
+    font-size: xx-large;
+    color: rgb(65, 155, 98)
 }
 
 .ant-layout-footer input {
