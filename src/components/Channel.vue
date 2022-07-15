@@ -3,7 +3,7 @@
     <div class="channel-input-search">
       <input type="text" placeholder="Tìm kiếm" />
     </div>
-    <div class="channel-list-wrapper">
+    <div class="channel-list-wrapper" :class="{loading: loading}">
       <div v-for="(item, index) in channelList.data" :key="index" class="">
         <router-link :to="`${item.channel_id}`" :key="$route.fullPath" class="channel-list-item" :class="{active: item.channel_id === $route.params.id}">
           <div class="channel-avatar-container">
@@ -41,7 +41,7 @@ import { storeToRefs } from "pinia";
 
 export default {
   setup() {
-    const { channelList } = storeToRefs(useChannelStore());
+    const { channelList, loading, error } = storeToRefs(useChannelStore());
     const { fetchChannel } = useChannelStore();
     fetchChannel();
 
@@ -62,10 +62,12 @@ export default {
       }
       return time;
     }
-
+    console.log(channelList.value.data)
     return {
       channelList,
       getTime,
+      error,
+      loading
     };
   },
 };

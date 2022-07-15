@@ -4,6 +4,7 @@ export const useMessageStore = defineStore('messages', {
   state: () => {
     return {
       messageList: [],
+      channelInfo: {},
       loading: false,
       error: null
     }
@@ -11,7 +12,8 @@ export const useMessageStore = defineStore('messages', {
   actions: {
     async fetchMessage(channelId, limit) {
       this.loading = true;
-      const token = "c_4oitiv5n7pp5zzzhnmlzn0hysormz7odwddujlrw2xbt2dhr8rddzsyjcbnlwllj";
+      const token = "c_eip3qnbd2tokbneqreco54knf6cb21ojuc3q6ahsewb3dioydeigapzuln5ztwfn";
+      const url1 = `https://chat.ghtk.vn/api/v3/channels/info?channel_id=${channelId}`
       const url = `https://chat.ghtk.vn/api/v3/messages?channel_id=${channelId}&limit=${limit}`
       try {
         this.messageList = await fetch(url, {
