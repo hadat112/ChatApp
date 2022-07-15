@@ -1,22 +1,40 @@
 <template>
   <div class="chat-container">
-    <div class="chat-view" style="width: 576px; height: 980px">
-      <a-layout-header style="background: #fff; padding: 0">
+    <div class="chat-view" style="width: 100%; height: 980px" v-if="channelInfoList.data">
+      <a-layout-header style="background: #fff; padding: 0" v-if="channelInfoList.data.channel_type == 'direct' ? true : false">
         <a-page-header
           backIcon=""
           style="border: 1px solid rgb(235, 237, 240)"
-          title="Hà Đạt"
-          sub-title="Web engineer"
+          :title="`${channelInfoList.data.channel_name}`"
+          :sub-title="`${channelInfoList.data.partner.position_name}`"
         >
           <template #extra>
             <ellipsis-outlined
-              @click="extraInfo"
+              @click="extra"
               style="font-size: 28px; color: #a4a4a4"
             />
           </template>
         </a-page-header>
         <div class="channel-info-btn"></div>
       </a-layout-header>
+
+      <a-layout-header style="background: #fff; padding: 0" v-if="channelInfoList.data.channel_type == 'group' ? true : false">
+        <a-page-header
+          backIcon=""
+          style="border: 1px solid rgb(235, 237, 240)"
+          :title="`${channelInfoList.data.channel_name}`"
+          :sub-title="`${channelInfoList.data.count_member}` + ' Thành viên' "
+        >
+          <template #extra>
+            <ellipsis-outlined
+              @click="extra"
+              style="font-size: 28px; color: #a4a4a4"
+            />
+          </template>
+        </a-page-header>
+        <div class="channel-info-btn"></div>
+      </a-layout-header>
+
       <a-layout-content>
         <div :style="{ padding: '24px', background: '#fff', height: '100vh' }">
           <div
@@ -42,23 +60,21 @@
         </div>
       </a-layout-content>
     </div>
-    <div
-      class="chat-info"
-      style="width: 375px; height: 980px"
-      v-if="clickButton"
-    >
-      <div class="info-container">
+    <div class="chat-info" style="width: 375px; height: 980px">
+      <div class="info-container" v-if="clickButton && clickExtraInfo">
         <div class="info-block" style="width: 375px; height: 339px">
-          <div class="info-avatar">
+          <div class="info-avatar" v-if="channelInfoList.data">
             <img
-              src="https://cache.giaohangtietkiem.vn/d/95cc21f4a7d54d0a9719cd2a2db4201e.jpg"
+              :src="`${channelInfoList.data.channel_type === 'direct' ? channelInfoList.data.avatar : channelInfoList.data.author.avatar}`"
               alt="avatar"
               style="height: 163px; width: 375px"
             />
           </div>
           <div class="info-name">
-            <div class="info-name-title">
-              <span class="name">Hà Văn Đạt</span>
+            <div class="info-name-title" v-if="channelInfoList.data">
+              <span class="name">
+                {{ channelInfoList.data.channel_name }}
+              </span>
             </div>
             <div class="info-name-active">
               <span class="active">Đang hoạt động</span>
@@ -72,12 +88,20 @@
               padding: 20px 0;
             "
           >
-            <div class="short-act-info-icon">
+            <div class="short-act-info-icon" v-if="channelInfoList.data.channel_type == 'direct' ? true : false">
               <div class="short-act-info-block">
                 <user-outlined class="user-outlined" @click="extraInfo" />
               </div>
               <span>Thông tin</span>
             </div>
+            
+            <div class="short-act-info-icon" v-if="channelInfoList.data.channel_type == 'group' ? true : false">
+              <div class="short-act-info-block">
+                <user-add-outlined class="user-outlined" @click="extraInfo" />
+              </div>
+              <span>Them nguoi</span>
+            </div>
+
             <div class="short-act-info-icon">
               <div class="short-act-info-block">
                 <message-outlined class="user-outlined" />
@@ -204,7 +228,7 @@
             >
               <button
                 class="create-group-button"
-                style="border-radius: 50%; border-color: #a4a4a4;"
+                style="border-radius: 50%; border-color: #a4a4a4"
               >
                 +Tạo
               </button>
@@ -254,7 +278,7 @@
             "
           >
             <div class="pin-chat-icon">
-              <pushpin-outlined style="padding-right: 10px; font-size: 20px"/>
+              <pushpin-outlined style="padding-right: 10px; font-size: 20px" />
             </div>
             <div class="pin-chat-text">
               <span>Ghim chat</span>
@@ -278,13 +302,54 @@
             "
           >
             <div class="setting-icon">
-              <setting-outlined style="padding-right: 10px; font-size: 20px"/>
+              <setting-outlined style="padding-right: 10px; font-size: 20px" />
             </div>
             <div class="setting-text">
               <span>Cài đặt cá nhân</span>
             </div>
             <div class="setting-right-icon" style="padding-left: 200px">
               <span><right-outlined style="padding-left: 10px" /></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="info-container" v-if="!clickButton">
+        <div
+          class="info-container-title"
+          style="
+            display: flex;
+            font-size: 18px;
+            font-weight: bold;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            height: 55px;
+            background-color: #fff;
+          "
+        >
+          <div class="info-container-title-icon">
+            <left-outlined @click="extraInfo" />
+          </div>
+          <div class="info-container-title-name" style="margin-left: 35%">
+            <span>Thông tin</span>
+          </div>
+        </div>
+        <div class="info-container-block">
+          <div class="sub-menu-item">
+            <div class="sub-menu-item-left">Username</div>
+            <div class="sub-menu-item-right" v-if="channelInfoList.data">
+              {{ channelInfoList.data.partner.username }}
+            </div>
+          </div>
+          <div class="sub-menu-item">
+            <div class="sub-menu-item-left">Vị trí</div>
+            <div class="sub-menu-item-right" v-if="channelInfoList.data">
+              {{ channelInfoList.data.partner.position_name }}
+            </div>
+          </div>
+          <div class="sub-menu-item">
+            <div class="sub-menu-item-left">Kho</div>
+            <div class="sub-menu-item-right" v-if="channelInfoList.data">
+              {{ channelInfoList.data.partner.station_name }}
             </div>
           </div>
         </div>
@@ -308,10 +373,14 @@ import {
   BellOutlined,
   PushpinOutlined,
   SettingOutlined,
+  LeftOutlined,
+  UserAddOutlined,
 } from "@ant-design/icons-vue";
 import { useMessageStore } from "../stores/message-list.js";
+import { useChannelInfoStore } from "../stores/channel-info.js";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
+import { ref } from "vue";
 
 export default {
   components: {
@@ -328,6 +397,8 @@ export default {
     BellOutlined,
     PushpinOutlined,
     SettingOutlined,
+    LeftOutlined,
+    UserAddOutlined,
   },
   setup() {
     const route = useRoute();
@@ -335,12 +406,31 @@ export default {
     const { fetchMessage } = useMessageStore();
     let channelID = route.params.id;
     fetchMessage(channelID, 40);
-    let clickButton = true;
+
+    const { channelInfoList } = storeToRefs(useChannelInfoStore());
+    const { fetchChannelInfo } = useChannelInfoStore();
+    let channelInfoID = route.params.id;
+    fetchChannelInfo(channelInfoID);
+    // console.log(channelInfoList.value.data.channel_type)
+
+    let clickButton = ref(true);
+    let clickExtraInfo = ref(false);
     let extraInfo = () => {
-      clickButton = !clickButton;
-      console.log(clickButton);
+      clickButton.value = !clickButton.value;
+      // console.log(clickButton);
     };
-    return { messageList, extraInfo, clickButton };
+
+    let extra = () => {
+      clickExtraInfo.value = !clickExtraInfo.value;
+    };
+    return {
+      messageList,
+      channelInfoList,
+      extraInfo,
+      clickButton,
+      clickExtraInfo,
+      extra,
+    };
   },
 };
 </script>
@@ -519,5 +609,20 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.sub-menu-item {
+  display: flex;
+  padding: 12px 0 0 10px;
+  cursor: pointer;
+  font-size: 15px;
+  background-color: #fff;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #d6d6d6;
+}
+.sub-menu-item-right {
+  margin-left: auto;
+  padding-right: 10px;
+  color: rgb(102, 102, 102);
 }
 </style>

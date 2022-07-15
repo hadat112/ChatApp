@@ -8,7 +8,7 @@ export const useMessageStore = defineStore('messages', {
   },
   actions: {
     async fetchMessage(channelId, limit) {
-      const token = "c_7zztqncs4bzvhroma4ejigr9hwmbx4xgn2riwlwa2igq3oww0wtsz1wvnwvkkdx1";
+      const token = "c_veoam5nqf2gvhduvt8vbebajswxfxfaa1kvateqllmmotmtdrvb7ufpms8e1foqw";
       const url = `https://chat.ghtk.vn/api/v3/messages?channel_id=${channelId}&limit=${limit}`
       this.messageList = await fetch(url, {
         headers: {
