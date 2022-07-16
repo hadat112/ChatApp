@@ -153,8 +153,6 @@ body {
     width: 100%;
 }
 
-
-
 .chat-view {
     height: 100%;
     display: flex;
@@ -199,7 +197,7 @@ i.ant-spin-dot-item {
 
 .message-container {
     display: flex;
-    margin: 8px 0 0 24px;
+    margin: 8px 0 4px 24px;
 }
 
 .message-container.self {
@@ -209,7 +207,6 @@ i.ant-spin-dot-item {
 .message-avt-container {
     margin: 9px 12px 0 0;
 }
-
 
 .message-avt {
     border-radius: 50%;
@@ -230,8 +227,21 @@ i.ant-spin-dot-item {
     font-size: 12px;
 }
 
+.message-attachments-item{
+    width: 100%;
+    max-width: 450px;
+    max-height: 300px;
+    border-radius: 10px;
+    border: 0.5px solid #ccc;
+}
 
-.message-text {
+.message-attachments-item img{
+    width: inherit;
+    height: inherit;
+    border-radius: 10px;
+}
+
+.message-text, .message-forward {
     background-color: #F0EFF4;
     border-radius: 10px;
     max-width: 100%;
@@ -240,9 +250,52 @@ i.ant-spin-dot-item {
     word-wrap: break-word;
 }
 
+.message-text a, .message-forward a {
+    text-decoration: underline;
+}
+
+.message-text.message_delete {
+    color: #a5a5a5 !important;
+    background-color: #fff !important; 
+    border: 0.5px solid #ccc !important;
+}
+
+.message-forward.self,
 .message-text.self {
-    background-color: #069255 !important;
+    background-color: #069255;
     color: #fff;
+}
+
+.message-text:not.self a {
+    color: #14a05b;
+}
+
+.message-forward a {
+    color: #14a05b;
+}
+
+.message-forward.self a,
+.message-text.self a {
+    color: #fff;
+}
+
+.message-forward-icon {
+    opacity: .5;
+}
+
+.message-forward-des {
+    padding: 4px 0 4px 16px;
+    border-bottom: 1px solid #ccc;
+}
+
+.message-forward-info {
+    opacity: .5;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.message-forward-text {
+    padding-top: 4px;
 }
 
 .ant-layout-footer {

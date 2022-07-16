@@ -12,7 +12,7 @@ export const useMessageStore = defineStore('messages', {
   actions: {
     async fetchMessage(channelId, limit) {
       this.loading = true;
-      const token = "c_eip3qnbd2tokbneqreco54knf6cb21ojuc3q6ahsewb3dioydeigapzuln5ztwfn";
+      const token = "c_1coyfcasrqwoxgxt6o2c714pybl4rz3bivuoc0klcgmgpumric5tj4kjquxz95pn";
       const url1 = `https://chat.ghtk.vn/api/v3/channels/info?channel_id=${channelId}`
       const url = `https://chat.ghtk.vn/api/v3/messages?channel_id=${channelId}&limit=${limit}`
       try {
@@ -26,6 +26,7 @@ export const useMessageStore = defineStore('messages', {
         this.error = err;
       } finally {
         this.loading = false;
+        console.log(this.messageList.data);
       }
     },
   },
