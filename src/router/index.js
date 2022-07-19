@@ -4,7 +4,7 @@ import { useMessageStore } from "../stores/message-list";
 const routes = [
     {
       path: "/:id?",
-      name: "home",
+      name: "chat",
       component: () =>
         import( "../pages/chat.vue"),
     },
@@ -17,7 +17,9 @@ const routes = [
   
   router.beforeEach((to, from, next) => {
     const store = useMessageStore();
-    store.fetchMessage(to.params.id, 40);
+    store.limit = 40;
+    store.channelId = to.params.id;
+    store.fetchMessage();
     next();
   })
 

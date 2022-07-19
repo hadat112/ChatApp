@@ -11,7 +11,7 @@
       </a-page-header>
       <div class="channel-info-btn"></div>
     </a-layout-header>
-    <a-layout-content>
+    <a-layout-content @scroll="scrollHandle">
       <div :style="{ background: '#fff' }">
         <div
           class="message-container"
@@ -21,18 +21,16 @@
             : []"
           :key="index"
         >
-          <div
-            v-if="item.sender.id != '6801990813180061667'"
-            class="message-avt-container"
+          <div class="message-avt-container"
+            v-if="index && item.sender.id != '6801990813180061667' && item.sender.id != messageList.data[messageList.data.length-index].sender.id"
           >
-            <div
-              class="message-avt"
+            <div class="message-avt"
               :style="`background-image: url(${item.sender.avatar})`"
             ></div>
           </div>
-          <div class="message-content">
+          <div class="message-content" :class="{ml47: index && item.sender.id == messageList.data[messageList.data.length-index].sender.id}">
             <div
-              v-if="item.sender.id != '6801990813180061667'"
+              v-if="index && item.sender.id != '6801990813180061667'  && item.sender.id != messageList.data[messageList.data.length-index].sender.id"
               class="message-sender"
             >
               {{ item.sender.fullname }}
@@ -76,22 +74,38 @@
       </div>
     </a-layout-content>
     <a-layout-footer>
-      <div class="message-more">
-        <ellipsis-outlined />
+      <div class="footer-expand">
       </div>
-      <input
-        type="text"
-        placeholder="Nhập nội dung tin nhắn"
-        name=""
-        v-model="messageInput"
-      />
-      <button
-        class="send-btn"
-        :class="{ active: messageInput }"
-        @click="sendMessageHandler"
-      >
-        <send-outlined />
-      </button>
+      <form v-on:submit.prevent="sendMessageHandler">
+        <div class="footer-input">
+  
+          <div class="message-more">
+            <ellipsis-outlined />
+          </div>
+    
+          <div class="menu-footer">
+            <input
+              type="text"
+              placeholder="Nhập nội dung tin nhắn"
+              name=""
+              v-model="messageInput"
+              @keyup.enter="sendMessageHandler"
+            />
+            <div class="menu-footer-icon">
+              <input type="file" hidden="hidden" ref="inputUpload" @change="onFileSelected">
+              <button class="upload-img" @click="$refs.inputUpload.click()">
+                <picture-filled />
+              </button>
+            </div>
+          </div>
+          <button
+            class="send-btn"
+            :class="{ active: messageInput }"
+          >
+            <send-outlined />
+          </button>
+        </div>
+      </form>
     </a-layout-footer>
   </div>
   '
@@ -108,46 +122,33 @@ import {
   SendOutlined,
   MoreOutlined,
   DoubleRightOutlined,
+  PictureFilled
 } from "@ant-design/icons-vue";
 import { useMessageStore } from "../stores/message-list.js";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
 import { message } from "ant-design-vue";
-
 export default {
   components: {
     EllipsisOutlined,
     SendOutlined,
     MoreOutlined,
     DoubleRightOutlined,
+    PictureFilled
   },
   methods: {
-    scrollHandle(e) {
-      const { target } = e;
-      console.log("jj");
-      if (
-        Math.ceil(target.scrollTop) <=
-        target.scrollHeight - target.offsetHeight
-      ) {
-        console.log("scroll");
-        //this code will run when the user scrolls to the bottom of this div so
-        //you could do an api call here to implement lazy loading
-        this.bottom = true;
-      }
-    },
+    
   },
   setup() {
     let messageInput = ref("");
     const route = useRoute();
-    const { messageList, loading, error } = storeToRefs(useMessageStore());
-    const { fetchMessage } = useMessageStore();
+    let { messageList, loading, error, limit, channelID } = storeToRefs(useMessageStore());
+    const { fetchMessage, sendMessage } = useMessageStore();
     const isShow = ref(true);
-    let channelID = route.params.id;
-    let limit = 40;
-    fetchMessage(channelID, limit);
-
-    if (messageList) console.log(messageList.value.data);
+    let selectFiles = ref([]);
+    channelID = route.params.id;
+    fetchMessage();
 
     function showInfo() {
       isShow.value = !isShow.value;
@@ -181,7 +182,28 @@ export default {
       return time;
     }
 
-    function sendMessageHandler() {}
+    async function sendMessageHandler() {
+      if(messageInput.value && channelID) await sendMessage(messageInput.value, selectFiles.value);
+      messageInput.value = "";
+      selectFiles.value = [];
+    }
+
+    function scrollHandle(e) {
+      const { target } = e;
+      console.log(limit.value);
+      // if (
+      //   Math.ceil(-target.scrollTop) >=
+      //   target.scrollHeight - target.offsetHeight +16 && loading
+      // ) {
+      //   limit.value+=20;
+      //   fetchMessage()
+      // }
+    };
+
+    function onFileSelected(e) {
+      selectFiles.value.push(e.target.files[0]);
+      console.log(selectFiles.value);
+    }
 
     return {
       messageList,
@@ -192,6 +214,8 @@ export default {
       isShow,
       urlify,
       getTime,
+      scrollHandle,
+      onFileSelected
     };
   },
 };

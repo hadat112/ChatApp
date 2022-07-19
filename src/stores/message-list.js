@@ -4,30 +4,50 @@ export const useMessageStore = defineStore('messages', {
   state: () => {
     return {
       messageList: [],
-      channelInfo: {},
+      channelId: null,
       loading: false,
-      error: null
+      error: null,
+      limit: 40,
+      token: "c_rgii1wpevgp2q4ftukxwxbgxu6iqhgoz8uxby0in0pufcstqezcbncloxefxmanm",
+      url: `https://chat.ghtk.vn/api/v3/messages`
     }
   },
   actions: {
-    async fetchMessage(channelId, limit) {
+    async fetchMessage() {
       this.loading = true;
-      const token = "c_1coyfcasrqwoxgxt6o2c714pybl4rz3bivuoc0klcgmgpumric5tj4kjquxz95pn";
-      const url1 = `https://chat.ghtk.vn/api/v3/channels/info?channel_id=${channelId}`
-      const url = `https://chat.ghtk.vn/api/v3/messages?channel_id=${channelId}&limit=${limit}`
+      const getUrl = this.url + `?channel_id=${this.channelId}&limit=${this.limit}`
       try {
-        this.messageList = await fetch(url, {
+        this.messageList = await fetch(getUrl, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${this.token}`,
           },
         })
           .then((res) => res.json())
-      } catch(err) {
+      } catch (err) {
         this.error = err;
       } finally {
         this.loading = false;
-        console.log(this.messageList.data);
       }
     },
+    async sendMessage(messageInput, selecteFiles) {
+      let formData = new FormData();
+      formData.append('attachment', []);
+      formData.append('channel_id', "1676242464193100389");
+      formData.append('mentions', []);
+      formData.append('msg_type', "text");
+      formData.append('ref_id', "1Pq2InaSrMP696rGQza5");
+      formData.append('text', "messageInput");
+
+      await fetch("https://chat.ghtk.vn/api/v3/messages", {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          'Content-Type': 'multipart/form-data'
+        },
+        body: formData
+      }).then(res => res.json())
+        .catch(err => console.log(err));
+      // await this.fetchMessage();
+    }
   },
 })

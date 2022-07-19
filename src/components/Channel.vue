@@ -3,9 +3,14 @@
     <div class="channel-input-search">
       <input type="text" placeholder="Tìm kiếm" />
     </div>
-    <div class="channel-list-wrapper" :class="{loading: loading}">
+    <div class="channel-list-wrapper" :class="{ loading: loading }">
       <div v-for="(item, index) in channelList.data" :key="index" class="">
-        <router-link :to="`${item.channel_id}`" :key="$route.fullPath" class="channel-list-item" :class="{active: item.channel_id === $route.params.id}">
+        <router-link
+          :to="`${item.channel_id}`"
+          :key="$route.fullPath"
+          class="channel-list-item"
+          :class="{ active: item.channel_id === $route.params.id }"
+        >
           <div class="channel-avatar-container">
             <div
               :style="`background-image: url(${
@@ -22,7 +27,18 @@
             </div>
             <div class="channel-last-msg">
               <div class="channel-text">
-                {{ item.last_message.text }}
+                <span
+                  v-if="item.channel_type === 'group'"
+                >
+                  {{
+                    item.last_message.sender.fullname.split(" ")[
+                      item.last_message.sender.fullname.split(" ").length - 1
+                    ] 
+                  }}:&nbsp;
+                </span>
+                <p style="display: inline-block"
+                 v-html="urlify(item.last_message.text)"> 
+                </p>
               </div>
               <div class="channel-time">
                 {{ getTime(item.last_message.created_at) }}
@@ -45,6 +61,15 @@ export default {
     const { fetchChannel } = useChannelStore();
     fetchChannel();
 
+    function urlify(text) {
+      if (text) {
+        var urlRegex = /(https?:\/\/[^\s]+)/g;
+        return text.replace(urlRegex, function (url) {
+          return '<a href="' + url + '">' + url + "</a>";
+        });
+      }
+    }
+
     function normalizeDate(number) {
       return number < 10 ? "0" + number : number;
     }
@@ -62,12 +87,12 @@ export default {
       }
       return time;
     }
-    console.log(channelList.value.data)
     return {
       channelList,
       getTime,
       error,
-      loading
+      loading,
+      urlify
     };
   },
 };

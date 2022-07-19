@@ -1,5 +1,5 @@
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -9,6 +9,10 @@
 
 ::-webkit-scrollbar-thumb:hover {
     background: #E0DFDF;
+}
+
+.ml47 {
+    margin-left: 47px;
 }
 
 * {
@@ -77,6 +81,7 @@ body {
 }
 
 .channel-list-wrapper {
+    padding-left: 6px;
     overflow-y: scroll;
 }
 
@@ -86,7 +91,7 @@ body {
 
 .channel-list-item {
     display: flex;
-    padding: 10px;
+    padding: 8px;
     border-top: 1px solid hsla(0, 0%, 91%, .4588235294117647);
 }
 
@@ -134,13 +139,30 @@ body {
     justify-content: space-between;
 }
 
+.channel-last-msg a {
+    color: #069255;
+}
+
 .channel-text {
+    display: flex;
+    flex-direction: row;
     font-size: 14px;
-    max-width: 180px;
+    max-width: 216px;
     height: 24px;
-    text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.channel-text span {
+    width: fit-content;
+    display: inline-block;
+}
+
+.channel-text p {
+    margin: 0;
+    display: inline-block;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .channel-time {
@@ -197,7 +219,7 @@ i.ant-spin-dot-item {
 
 .message-container {
     display: flex;
-    margin: 8px 0 4px 24px;
+    margin: 0px 0 2px 24px;
 }
 
 .message-container.self {
@@ -218,7 +240,8 @@ i.ant-spin-dot-item {
 
 .message-content {
     max-width: 60%;
-    margin: 2px 0 0 0;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -228,17 +251,18 @@ i.ant-spin-dot-item {
 }
 
 .message-attachments-item{
-    width: 100%;
     max-width: 450px;
     max-height: 300px;
     border-radius: 10px;
-    border: 0.5px solid #ccc;
+    margin-bottom: 2px;
 }
 
 .message-attachments-item img{
-    width: inherit;
-    height: inherit;
+    max-width: 100%;
+    max-height: 300px;
+    height: auto;
     border-radius: 10px;
+    border: 0.5px solid #ccc;
 }
 
 .message-text, .message-forward {
@@ -264,9 +288,10 @@ i.ant-spin-dot-item {
 .message-text.self {
     background-color: #069255;
     color: #fff;
+    align-self: end;
 }
 
-.message-text:not.self a {
+.message-text a {
     color: #14a05b;
 }
 
@@ -299,15 +324,18 @@ i.ant-spin-dot-item {
 }
 
 .ant-layout-footer {
-    align-items: center;
     background-color: #fff;
-    border-top: 1px solid rgb(235, 237, 240);
-    display: flex;
-    justify-content: space-between;
+    border-top: 1px solid rgb(179, 185, 194);
     padding: 6px 24px;
 }
 
-.ant-layout-footer .message-more {
+.footer-input {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-input .message-more {
     background-color: transparent;
     border: none;
     border-radius: 40px;
@@ -316,16 +344,44 @@ i.ant-spin-dot-item {
     margin-right: 8px;
 }
 
-.ant-layout-footer input {
+.menu-footer {
+    align-items: center;
     background-color: #f5f4f4;
-    border: none;
     border-radius: 40px;
-    padding: 12px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 32px 0 0;
     width: 90%;
+}
+.menu-footer>input {
+    background-color: transparent;
+    border: none;
+    padding: 12px 15px;
     height: auto;
+    width: 90%;
 }
 
-.ant-layout-footer input:focus {
+.menu-footer>input:focus {
+    outline: none;
+}
+
+.menu-footer-icon {
+    height: 28px;
+}
+
+.menu-footer-icon .upload-img {
+    height: 28px;
+    width: 28px;
+    border: none;
+    border-radius: 10px;
+    color: #14a05b;
+    display: flex;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.menu-footer-icon .upload-img:focus {
     outline: none;
 }
 
@@ -335,6 +391,10 @@ i.ant-spin-dot-item {
     border-radius: 40px;
     font-size: x-large;
     color: rgb(204, 204, 204)
+}
+
+.send-btn:focus {
+    outline: none;
 }
 
 .send-btn.active {
