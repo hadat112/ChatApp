@@ -15,7 +15,10 @@
       <div :style="{ background: '#fff' }">
         <div
           class="message-container"
-          :class="{ self: item.sender.id == '6801990813180061667' }"
+          :class="{ 
+            self: item.sender.id == '6801990813180061667',
+            mt16: index && item.sender.id != messageList.data[messageList.data.length-index].sender.id
+          }"
           v-for="(item, index) in messageList.data
             ? messageList.data.slice().reverse()
             : []"
@@ -191,7 +194,7 @@ export default {
       const { target } = e;
       if (
         Math.ceil(-target.scrollTop) >=
-        target.scrollHeight - target.offsetHeight +15.1 && loading
+        target.scrollHeight - target.offsetHeight +15 && loading
       ) {
         limit.value+=20;
         fetchMessage()

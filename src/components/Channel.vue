@@ -3,6 +3,14 @@
     <div class="channel-input-search">
       <input type="text" placeholder="Tìm kiếm" />
     </div>
+    <div class="channel-tool">
+      <div class="channel-tool-create">
+        <plus-outlined />Chats
+      </div>
+      <div class="channel-tool-actions">
+        Thao tác 
+      </div>
+    </div>
     <div class="channel-list-wrapper" :class="{ loading: loading }">
       <div v-for="(item, index) in channelList.data" :key="index" class="">
         <router-link
@@ -54,8 +62,12 @@
 <script>
 import { useChannelStore } from "../stores/channel.js";
 import { storeToRefs } from "pinia";
+import {  PlusOutlined } from "@ant-design/icons-vue";
 
 export default {
+  components: {
+    PlusOutlined
+  },
   setup() {
     const { channelList, loading, error } = storeToRefs(useChannelStore());
     const { fetchChannel } = useChannelStore();
