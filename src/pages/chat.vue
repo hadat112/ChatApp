@@ -128,7 +128,6 @@ import { useMessageStore } from "../stores/message-list.js";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
-import { message } from "ant-design-vue";
 export default {
   components: {
     EllipsisOutlined,
@@ -143,11 +142,11 @@ export default {
   setup() {
     let messageInput = ref("");
     const route = useRoute();
-    let { messageList, loading, error, limit, channelID } = storeToRefs(useMessageStore());
+    let { messageList, loading, error, limit, currentChannel} = storeToRefs(useMessageStore());
     const { fetchMessage, sendMessage } = useMessageStore();
     const isShow = ref(true);
     let selectFiles = ref([]);
-    channelID = route.params.id;
+    currentChannel.value = route.params.id;
     fetchMessage();
 
     function showInfo() {
@@ -183,21 +182,20 @@ export default {
     }
 
     async function sendMessageHandler() {
-      if(messageInput.value && channelID) await sendMessage(messageInput.value, selectFiles.value);
+      if(messageInput.value && channelID.value) await sendMessage(messageInput.value, selectFiles.value);
       messageInput.value = "";
       selectFiles.value = [];
     }
 
     function scrollHandle(e) {
       const { target } = e;
-      console.log(limit.value);
-      // if (
-      //   Math.ceil(-target.scrollTop) >=
-      //   target.scrollHeight - target.offsetHeight +16 && loading
-      // ) {
-      //   limit.value+=20;
-      //   fetchMessage()
-      // }
+      if (
+        Math.ceil(-target.scrollTop) >=
+        target.scrollHeight - target.offsetHeight +15.1 && loading
+      ) {
+        limit.value+=20;
+        fetchMessage()
+      }
     };
 
     function onFileSelected(e) {
