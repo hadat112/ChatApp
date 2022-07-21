@@ -6,28 +6,58 @@ export const useMessageStore = defineStore('messages', {
       messageList: [],
       currentChannel: null,
       loading: false,
+      loadingMore: false,
       error: null,
-      limit: 40,
-      token: "c_xmompcdoxhahcn3nrg8m3scnvmmctmvmxrqswhqcaxeb8ofqje9oab2g945bli17" 
+      limit: 20,
+      before: 0,
+      token: "c_9wlorku4whpg50w5yxpg1ejvdmbwp0g8wdfizyc1gveaoqljeav501xgqw51tska"
     }
   },
   actions: {
     async fetchMessage() {
       this.loading = true;
+
+      const url1 = `https://chat.ghtk.vn/api/v3/messages?channel_id=${this.currentChannel}&before=${this.before}&limit=${this.limit}`
       const url = `https://chat.ghtk.vn/api/v3/messages?channel_id=${this.currentChannel}&limit=${this.limit}`
       try {
-        this.messageList = await fetch(url, {
+        let messages = await fetch(url1, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
         })
           .then((res) => res.json())
+        // let removefirst = messages.data.splice(0, messages.data.length - 40);
+        this.messageList = messages.data
       } catch (err) {
         this.error = err;
       } finally {
         this.loading = false;
       }
     },
+
+    async fetchMore() {
+      this.loadingMore = true;
+      let messages
+      const url1 = `https://chat.ghtk.vn/api/v3/messages?channel_id=${this.currentChannel}&before=${this.before}&limit=${this.limit}`
+      const url = `https://chat.ghtk.vn/api/v3/messages?channel_id=${this.currentChannel}&limit=${this.limit}`
+      try {
+        messages= await fetch(url1, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+          .then((res) => res.json())
+          } catch (err) {
+            this.error = err;
+          } finally {
+            this.loadingMore = false;
+          }
+          // console.log(messages)
+          if(messages.data.length)  {let removefirst = messages.data.splice(0, 40)};
+          this.messageList.push(...messages.data)
+      // console.log(this.messageList.length)
+    },
+
     async sendMessage(messageInput, selecteFiles) {
       // let formData = new FormData();
       // formData.append('attachment', []);

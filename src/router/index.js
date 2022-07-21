@@ -17,8 +17,9 @@ const routes = [
   
   router.beforeEach((to, from, next) => {
     const store = useMessageStore();
-    store.limit = 40;
     store.currentChannel = to.params.id
+    store.before = from.params.id
+    store.limit = 20;
     store.fetchMessage();
     next();
   })

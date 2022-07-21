@@ -11,42 +11,78 @@
       </a-page-header>
       <div class="channel-info-btn"></div>
     </a-layout-header>
-    <a-layout-content @scroll="scrollHandle">
+    <a-layout-content
+      @scroll.prevent="scrollHandle"
+      :class="{ stopScroll: loadingMore }"
+    >
       <div :style="{ background: '#fff' }">
+        <div class="load-more-msg" style="width: 100%">
+          <a-spin class="" style="width: 100%" v-if="loadingMore" />
+        </div>
         <div
           class="message-container"
-          :class="{ 
+          :class="{
             self: item.sender.id == '6801990813180061667',
-            mt16: index && item.sender.id != messageList.data[messageList.data.length-index].sender.id
+            mt16:
+              index &&
+              item.sender.id !=
+                messageList[messageList.length - index].sender.id,
           }"
-          v-for="(item, index) in messageList.data
-            ? messageList.data.slice().reverse()
+          v-for="(item, index) in messageList
+            ? messageList.slice().reverse()
             : []"
           :key="index"
         >
-          <div class="message-avt-container"
-            v-if="index && item.sender.id != '6801990813180061667' && item.sender.id != messageList.data[messageList.data.length-index].sender.id"
+          <div
+            class="message-avt-container"
+            v-if="
+              index &&
+              item.sender.id != '6801990813180061667' &&
+              item.sender.id !=
+                messageList[messageList.length - index].sender.id
+            "
           >
-            <div class="message-avt"
+            <div
+              class="message-avt"
               :style="`background-image: url(${item.sender.avatar})`"
             ></div>
           </div>
-          <div class="message-content" :class="{ml47: index && item.sender.id == messageList.data[messageList.data.length-index].sender.id}">
+          <div
+            class="message-content"
+            :class="{
+              ml47:
+                index &&
+                item.sender.id ==
+                  messageList[messageList.length - index].sender.id,
+            }"
+          >
             <div
-              v-if="index && item.sender.id != '6801990813180061667'  && item.sender.id != messageList.data[messageList.data.length-index].sender.id"
+              v-if="
+                index &&
+                item.sender.id != '6801990813180061667' &&
+                item.sender.id !=
+                  messageList[messageList.length - index].sender.id
+              "
               class="message-sender"
             >
               {{ item.sender.fullname }}
             </div>
             <div class="message-attachments">
-              <div v-for="attachment in item.attachments" :key="attachment.id" class="message-attachments-item">
-              <img :src="`${attachment.url}`" alt="">
+              <div
+                v-for="attachment in item.attachments"
+                :key="attachment.id"
+                class="message-attachments-item"
+              >
+                <img :src="`${attachment.url}`" alt="" />
               </div>
             </div>
             <div
               v-if="item.text && item.msg_type == 'text'"
               class="message-text"
-              :class="{ self: item.sender.id == '6801990813180061667', message_delete: item.text === 'Tin nhắn đã được thu hồi' }"
+              :class="{
+                self: item.sender.id == '6801990813180061667',
+                message_delete: item.text === 'Tin nhắn đã được thu hồi',
+              }"
               v-html="urlify(item.text)"
             ></div>
             <div
@@ -77,31 +113,39 @@
       </div>
     </a-layout-content>
     <a-layout-footer>
-      <div class="footer-expand">
-      </div>
-      <form v-on:submit.prevent="sendMessageHandler">
+      <div class="footer-expand"></div>
+      <form @submit.prevent="sendMessageHandle">
         <div class="footer-input">
-  
           <div class="message-more">
             <ellipsis-outlined />
           </div>
-    
+
           <div class="menu-footer">
             <input
               type="text"
               placeholder="Nhập nội dung tin nhắn"
               name=""
               v-model="messageInput"
-              @keyup.enter="sendMessageHandler"
+              @keyup.enter.prevent="submit"
             />
             <div class="menu-footer-icon">
-              <input type="file" hidden="hidden" ref="inputUpload" @change="onFileSelected">
-              <button class="upload-img" @click="$refs.inputUpload.click()">
+              <input
+                type="file"
+                hidden="hidden"
+                ref="inputUpload"
+                @change="onFileSelected"
+              />
+              <button
+                type="button"
+                class="upload-img"
+                @click.prevent="$refs.inputUpload.click()"
+              >
                 <picture-filled />
               </button>
             </div>
           </div>
           <button
+            type="submit"
             class="send-btn"
             :class="{ active: messageInput }"
           >
@@ -125,7 +169,7 @@ import {
   SendOutlined,
   MoreOutlined,
   DoubleRightOutlined,
-  PictureFilled
+  PictureFilled,
 } from "@ant-design/icons-vue";
 import { useMessageStore } from "../stores/message-list.js";
 import { storeToRefs } from "pinia";
@@ -137,20 +181,24 @@ export default {
     SendOutlined,
     MoreOutlined,
     DoubleRightOutlined,
-    PictureFilled
+    PictureFilled,
   },
-  methods: {
-    
-  },
+  methods: {},
   setup() {
-    let messageInput = ref("");
     const route = useRoute();
-    let { messageList, loading, error, limit, currentChannel} = storeToRefs(useMessageStore());
-    const { fetchMessage, sendMessage } = useMessageStore();
+
+    let { messageList, loading, loadingMore, error, limit, currentChannel } =
+      storeToRefs(useMessageStore());
+    const { fetchMessage, fetchMore, sendMessage } = useMessageStore();
+
     const isShow = ref(true);
+
+    let messageInput = ref("");
     let selectFiles = ref([]);
+
     currentChannel.value = route.params.id;
-    fetchMessage();
+    // fetchMessage();
+    if (messageList) console.log(messageList.value);
 
     function showInfo() {
       isShow.value = !isShow.value;
@@ -177,46 +225,60 @@ export default {
         "/" +
         normalizeDate(d.getMonth() + 1) +
         "/" +
-        d.getFullYear() + " "
-        + normalizeDate(d.getHours()) + ":"
-        + normalizeDate(d.getMinutes()) + " "
-        + d.getDay();
+        d.getFullYear() +
+        " " +
+        normalizeDate(d.getHours()) +
+        ":" +
+        normalizeDate(d.getMinutes()) +
+        " " +
+        d.getDay();
       return time;
     }
 
-    async function sendMessageHandler() {
-      if(messageInput.value && channelID.value) await sendMessage(messageInput.value, selectFiles.value);
+    async function sendMessageHandle() {
+      if (messageInput.value && currentChannel.value)
+        await sendMessage(messageInput.value, selectFiles.value);
       messageInput.value = "";
       selectFiles.value = [];
     }
 
-    function scrollHandle(e) {
+    async function scrollHandle(e) {
       const { target } = e;
+      // console.log(Math.ceil(-target.scrollTop), target.scrollHeight - target.offsetHeight + 15);
       if (
         Math.ceil(-target.scrollTop) >=
-        target.scrollHeight - target.offsetHeight +15 && loading
+          Math.ceil(target.scrollHeight - target.offsetHeight + 15) &&
+        loadingMore
       ) {
-        limit.value+=20;
-        fetchMessage()
+        if (limit.value < 100) {
+          limit.value += 10;
+          await fetchMore();
+        }
       }
-    };
+    }
 
     function onFileSelected(e) {
       selectFiles.value.push(e.target.files[0]);
       console.log(selectFiles.value);
     }
 
+    function prevPage() {
+      console.log("abc)");
+    }
+
     return {
       messageList,
       loading,
+      loadingMore,
       messageInput,
-      sendMessageHandler,
+      sendMessageHandle,
       showInfo,
       isShow,
       urlify,
       getTime,
+      prevPage,
       scrollHandle,
-      onFileSelected
+      onFileSelected,
     };
   },
 };

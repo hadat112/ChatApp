@@ -238,6 +238,10 @@ i.ant-spin-dot-item {
     margin-bottom: 24px;
 }
 
+.stopScoll {
+    overflow: hidden;
+}
+
 .message-container {
     display: flex;
     margin: 0px 0 2px 24px;
