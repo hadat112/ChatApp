@@ -143,8 +143,8 @@
       </a-layout-content>
     </div>
 
-    <div class="chat-info" style="width: 375px; height: 980px"  :class="{ chatinfobtn: isShow }">
-      <div class="info-container" v-if="clickButton && clickExtraInfo">
+    <div class="chat-info" style="width: 375px;"  :class="{ chatinfobtn: isShow }">
+      <div class="info-container" v-if="clickExtraInfo">
         <div class="info-block" style="width: 375px; height: 339px">
           <div class="info-avatar" v-if="channelInfoList.data">
             <img
