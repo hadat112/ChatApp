@@ -194,6 +194,7 @@ body {
 /* chat-view */
 .ant-layout > .ant-layout {
     flex-direction: row;
+    position: relative;
     width: 100%;
 }
 
@@ -219,7 +220,6 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-
 }
 
 i.ant-spin-dot-item {

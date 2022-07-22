@@ -1,5 +1,6 @@
 <template>
   <a-spin class="chat-spinner" v-if="loading || loadingChannelInfo" />
+  <!-- chatview -->
   <div class="chat-view" :class="{ loading: loading || loadingChannelInfo }">
     <!-- header -->
     <a-layout-header
@@ -40,6 +41,7 @@
         <div class="load-more-msg" style="width: 100%">
           <a-spin class="" style="width: 100%" v-if="loadingMore" />
         </div>
+        <!-- msg container-->
         <div
           class="message-container"
           :class="{
@@ -82,10 +84,10 @@
             <!-- msg name -->
             <div
               v-if="
-                index &&
                 item.sender.id != '6801990813180061667' &&
+                (index == 0 ||
                 item.sender.id !=
-                  messageList[messageList.length - index].sender.id
+                  messageList[messageList.length - index].sender.id)
               "
               class="message-sender"
             >
@@ -156,6 +158,7 @@
         </div>
       </div>
     </a-layout-content>
+    <!-- sider -->
     <a-layout-footer>
       <div class="footer-expand"></div>
       <form @submit.prevent="sendMessageHandle">
@@ -199,7 +202,7 @@
       </form>
     </a-layout-footer>
   </div>
-
+  <!-- chatinfor -->
   <div
     v-if="!loadingChannelInfo"
     class="chat-info"
@@ -505,8 +508,6 @@ export default {
     let messageInput = ref("");
     let selectFiles = ref([]);
     currentChannel.value = route.params.id;
-
-    fetchChannelInfo(currentChannel.value);
 
     let extraInfo = () => {
       clickButton.value = !clickButton.value;
