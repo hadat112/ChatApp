@@ -3,7 +3,8 @@ import App from './App.vue'
 import {defineAsyncComponent} from 'vue'
 import 'ant-design-vue/dist/antd.css';
 import router from "./router";
-import { createPinia } from 'pinia'
+import { createPinia } from 'pinia';
+import '/home/tranhuyhoan/Documents/GitHub/ChatApp/src/assets/styles/chat-info.css';
 
 import {
     Layout,

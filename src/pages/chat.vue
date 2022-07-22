@@ -1,7 +1,14 @@
 <template>
   <div class="chat-container">
-    <div class="chat-view" style="width: 100%; height: 980px" v-if="channelInfoList.data">
-      <a-layout-header style="background: #fff; padding: 0" v-if="channelInfoList.data.channel_type == 'direct' ? true : false">
+    <div
+      class="chat-view"
+      style="width: 100%; height: 980px"
+      v-if="channelInfoList.data"
+    >
+      <a-layout-header
+        style="background: #fff; padding: 0"
+        v-if="channelInfoList.data.channel_type == 'direct' ? true : false"
+      >
         <a-page-header
           backIcon=""
           style="border: 1px solid rgb(235, 237, 240)"
@@ -18,12 +25,15 @@
         <div class="channel-info-btn"></div>
       </a-layout-header>
 
-      <a-layout-header style="background: #fff; padding: 0" v-if="channelInfoList.data.channel_type == 'group' ? true : false">
+      <a-layout-header
+        style="background: #fff; padding: 0"
+        v-if="channelInfoList.data.channel_type == 'group' ? true : false"
+      >
         <a-page-header
           backIcon=""
           style="border: 1px solid rgb(235, 237, 240)"
           :title="`${channelInfoList.data.channel_name}`"
-          :sub-title="`${channelInfoList.data.count_member}` + ' Thành viên' "
+          :sub-title="`${channelInfoList.data.count_member}` + ' Thành viên'"
         >
           <template #extra>
             <ellipsis-outlined
@@ -65,7 +75,11 @@
         <div class="info-block" style="width: 375px; height: 339px">
           <div class="info-avatar" v-if="channelInfoList.data">
             <img
-              :src="`${channelInfoList.data.channel_type === 'direct' ? channelInfoList.data.avatar : channelInfoList.data.author.avatar}`"
+              :src="`${
+                channelInfoList.data.channel_type === 'direct'
+                  ? channelInfoList.data.avatar
+                  : channelInfoList.data.author.avatar
+              }`"
               alt="avatar"
               style="height: 163px; width: 375px"
             />
@@ -88,14 +102,22 @@
               padding: 20px 0;
             "
           >
-            <div class="short-act-info-icon" v-if="channelInfoList.data.channel_type == 'direct' ? true : false">
+            <div
+              class="short-act-info-icon"
+              v-if="
+                channelInfoList.data.channel_type == 'direct' ? true : false
+              "
+            >
               <div class="short-act-info-block">
                 <user-outlined class="user-outlined" @click="extraInfo" />
               </div>
               <span>Thông tin</span>
             </div>
-            
-            <div class="short-act-info-icon" v-if="channelInfoList.data.channel_type == 'group' ? true : false">
+
+            <div
+              class="short-act-info-icon"
+              v-if="channelInfoList.data.channel_type == 'group' ? true : false"
+            >
               <div class="short-act-info-block">
                 <user-add-outlined class="user-outlined" @click="extraInfo" />
               </div>
@@ -133,93 +155,53 @@
               />
             </form>
           </div>
-          <div
-            class="imgage-link"
-            style="
-              padding-top: 10px;
-              display: flex;
-              flex-direction: row;
-              margin: 10px 0;
-              cursor: pointer;
-              border-top: 3px solid hsla(0, 0%, 91%, 0.4588235294117647);
-            "
-          >
-            <div class="image-link-icon">
+          <div class="sub-item">
+            <div class="sub-item-icon">
               <file-image-outlined style="padding-right: 10px" />
             </div>
-            <div class="image-link-text">
+            <div class="sub-item-text">
               <span>Ảnh, file, link chia sẻ</span>
             </div>
-            <div class="image-link-right-icon" style="padding-left: 170px">
+            <div class="sub-item-right-icon" style="padding-left: 170px">
               <span>5</span>
               <span
                 ><right-outlined @click="extraInfo" style="padding-left: 10px"
               /></span>
             </div>
           </div>
-          <div
-            class="calender"
-            style="
-              padding-top: 10px;
-              display: flex;
-              flex-direction: row;
-              margin: 10px 0;
-              cursor: pointer;
-              border-top: 3px solid hsla(0, 0%, 91%, 0.4588235294117647);
-            "
-          >
-            <div class="calender-icon">
+          <div class="sub-item">
+            <div class="sub-item-icon">
               <clock-circle-outlined style="padding-right: 10px" />
             </div>
-            <div class="calender-text">
+            <div class="sub-item-text">
               <span>Lịch hẹn</span>
             </div>
-            <div class="calender-right-icon" style="padding-left: 250px">
+            <div class="sub-item-right-icon" style="padding-left: 250px">
               <span>5</span>
               <span
                 ><right-outlined @click="extraInfo" style="padding-left: 10px"
               /></span>
             </div>
           </div>
-          <div
-            class="mail"
-            style="
-              padding-top: 10px;
-              display: flex;
-              flex-direction: row;
-              margin: 10px 0;
-              cursor: pointer;
-              border-top: 3px solid hsla(0, 0%, 91%, 0.4588235294117647);
-            "
-          >
-            <div class="mail-icon">
+          <div class="sub-item">
+            <div class="sub-tem-icon">
               <mail-outlined style="padding-right: 10px" />
             </div>
-            <div class="mail-text">
+            <div class="sub-item-text">
               <span>Mail chung</span>
             </div>
-            <div class="mail-right-icon" style="padding-left: 235px">
+            <div class="sub-item-right-icon" style="padding-left: 235px">
               <span>5</span>
               <span
                 ><right-outlined @click="extraInfo" style="padding-left: 10px"
               /></span>
             </div>
           </div>
-          <div
-            class="group"
-            style="
-              padding-top: 10px;
-              display: flex;
-              flex-direction: row;
-              margin: 10px 0;
-              cursor: pointer;
-              border-top: 3px solid hsla(0, 0%, 91%, 0.4588235294117647);
-            "
-          >
-            <div class="group-icon">
+          <div class="sub-item">
+            <div class="sub-item-icon">
               <team-outlined style="padding-right: 10px" />
             </div>
-            <div class="group-text">
+            <div class="sub-item-text">
               <span>Group chung</span>
             </div>
             <div
@@ -233,7 +215,7 @@
                 +Tạo
               </button>
             </div>
-            <div class="group-right-icon" style="padding-left: 147px">
+            <div class="sub-item-right-icon" style="padding-left: 147px">
               <span>5</span>
               <span
                 ><right-outlined @click="extraInfo" style="padding-left: 10px"
@@ -242,72 +224,42 @@
           </div>
         </div>
         <div class="info-block" style="width: 375px; height: 300px">
-          <div
-            class="notification"
-            style="
-              padding-top: 10px;
-              display: flex;
-              flex-direction: row;
-              margin: 10px 0;
-              cursor: pointer;
-              border-top: 3px solid hsla(0, 0%, 91%, 0.4588235294117647);
-            "
-          >
-            <div class="notification-icon">
+          <div class="sub-item">
+            <div class="sub-item-icon">
               <bell-outlined style="padding-right: 10px; font-size: 25px" />
             </div>
-            <div class="notification-text">
+            <div class="sub-item-text">
               <span>Thông báo</span>
             </div>
-            <div class="notification-icon-right" style="padding-left: 210px">
+            <div class="sub-item-icon-right" style="padding-left: 210px">
               <label class="switch">
                 <input type="checkbox" />
                 <span class="slider round"></span>
               </label>
             </div>
           </div>
-          <div
-            class="pin-chat"
-            style="
-              padding-top: 10px;
-              display: flex;
-              flex-direction: row;
-              margin: 10px 0;
-              cursor: pointer;
-              border-top: 3px solid hsla(0, 0%, 91%, 0.4588235294117647);
-            "
-          >
-            <div class="pin-chat-icon">
+          <div class="sub-item">
+            <div class="sub-item-icon">
               <pushpin-outlined style="padding-right: 10px; font-size: 20px" />
             </div>
-            <div class="pin-chat-text">
+            <div class="sub-item-text">
               <span>Ghim chat</span>
             </div>
-            <div class="pin-chat-icon-right" style="padding-left: 220px">
+            <div class="sub-item-icon-right" style="padding-left: 220px">
               <label class="switch">
                 <input type="checkbox" />
                 <span class="slider round"></span>
               </label>
             </div>
           </div>
-          <div
-            class="setting"
-            style="
-              padding-top: 10px;
-              display: flex;
-              flex-direction: row;
-              margin: 10px 0;
-              cursor: pointer;
-              border-top: 3px solid hsla(0, 0%, 91%, 0.4588235294117647);
-            "
-          >
-            <div class="setting-icon">
+          <div class="sub-item">
+            <div class="sub-item-icon">
               <setting-outlined style="padding-right: 10px; font-size: 20px" />
             </div>
-            <div class="setting-text">
+            <div class="sub-item-text">
               <span>Cài đặt cá nhân</span>
             </div>
-            <div class="setting-right-icon" style="padding-left: 200px">
+            <div class="sub.item-right-icon" style="padding-left: 200px">
               <span><right-outlined style="padding-left: 10px" /></span>
             </div>
           </div>
@@ -460,169 +412,4 @@ export default {
   word-wrap: break-word;
 }
 
-.info-block {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 10px;
-  font-size: 15px;
-  background-color: #fff;
-  border-bottom: 4px;
-  margin: 10px 0;
-}
-.chat-container {
-  display: flex;
-  flex-direction: row;
-  align-content: flex-start;
-}
-.info-container {
-  background-color: #eee;
-  letter-spacing: 0.2px;
-  overflow: auto;
-  height: 100%;
-  position: relative;
-}
-
-.chat-info {
-  flex: 0 1 25%;
-  min-width: 375px;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-  position: relative;
-}
-
-.info-name {
-  padding-top: 12px;
-}
-.info-name-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  padding: 0 10px;
-}
-
-.info-name-title .name {
-  font-weight: 700;
-  font-size: 18px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: flex;
-}
-
-.info-name-active {
-  text-align: center;
-  color: #828282;
-  font-size: 15px;
-  line-height: 18px;
-}
-
-.info-avatar img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
-.short-act-info-block {
-  display: flex;
-  flex-direction: column;
-}
-
-.short-act-info-icon {
-  text-align: center;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.user-outlined {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  border-radius: 50%;
-  background-color: #14a05b;
-  color: #fff;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 20px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 19px;
-  width: 21px;
-  top: 1px;
-  left: 1px;
-  bottom: 1px;
-  background-color: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-}
-
-input:checked + .slider {
-  background-color: green;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px white;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(18px);
-  -ms-transform: translateX(18px);
-  transform: translateX(18px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-.sub-menu-item {
-  display: flex;
-  padding: 12px 0 0 10px;
-  cursor: pointer;
-  font-size: 15px;
-  background-color: #fff;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #d6d6d6;
-}
-.sub-menu-item-right {
-  margin-left: auto;
-  padding-right: 10px;
-  color: rgb(102, 102, 102);
-}
 </style>
