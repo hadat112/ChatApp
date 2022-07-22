@@ -33,7 +33,6 @@ export const useMessageStore = defineStore('messages', {
       } finally {
         this.loading = false;
       }
-      console.log(this.messageList);
     },
 
     async fetchMore() {
