@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useChannelInfoStore } from "../stores/channel-info";
 import { useMessageStore } from "../stores/message-list";
 
 const routes = [
@@ -16,11 +17,15 @@ const routes = [
   });
   
   router.beforeEach((to, from, next) => {
-    const store = useMessageStore();
-    store.currentChannel = to.params.id
-    store.before = from.params.id
-    store.limit = 20;
-    store.fetchMessage();
+    const msgStore = useMessageStore();
+    msgStore.currentChannel = to.params.id
+    msgStore.before = from.params.id
+    msgStore.limit = 20;
+    msgStore.fetchMessage();
+
+    const channelInfoStore = useChannelInfoStore();
+    channelInfoStore.fetchChannelInfo(to.params.id);
+
     next();
   })
 

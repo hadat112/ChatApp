@@ -1,5 +1,4 @@
 <template>
-  <div class="chat-container">
     <div class="chat-view" :class="{ loading: loading }">
       <a-spin class="chat-spinner" v-if="loading" />
       <!-- header -->
@@ -380,7 +379,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
