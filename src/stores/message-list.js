@@ -10,7 +10,7 @@ export const useMessageStore = defineStore('messages', {
       error: null,
       limit: 20,
       before: 0,
-      token: "c_9wlorku4whpg50w5yxpg1ejvdmbwp0g8wdfizyc1gveaoqljeav501xgqw51tska"
+      token: "c_2was5vgocccferhuqkpwnazegzjroeai1mnz6tppbfnbsclq0uwp7eis23meonyy"
     }
   },
   actions: {
@@ -33,6 +33,7 @@ export const useMessageStore = defineStore('messages', {
       } finally {
         this.loading = false;
       }
+      console.log(this.messageList);
     },
 
     async fetchMore() {

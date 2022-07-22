@@ -36,10 +36,9 @@
           <div
             class="message-avt-container"
             v-if="
-              index &&
               item.sender.id != '6801990813180061667' &&
-              item.sender.id !=
-                messageList[messageList.length - index].sender.id
+              (index == 0 || item.sender.id !=
+                messageList[messageList.length - index].sender.id)
             "
           >
             <div
@@ -73,7 +72,21 @@
                 :key="attachment.id"
                 class="message-attachments-item"
               >
-                <img :src="`${attachment.url}`" alt="" />
+                <img
+                  v-if="
+                    attachment.ext == 'jpg' ||
+                    attachment.ext == 'jpeg'||
+                    attachment.ext == 'png' ||
+                    attachment.ext == 'gif' ||
+                    attachment.ext == 'svg'
+                  "
+                  :src="`${attachment.url}`"
+                  alt=""
+                />
+                <video width="400" v-if="attachment.ext == 'mp4'" controls>
+                  <source :src="`${attachment.url}`" type="video/mp4" />
+                  Your browser does not support HTML video.
+                </video>
               </div>
             </div>
             <div
@@ -197,8 +210,6 @@ export default {
     let selectFiles = ref([]);
 
     currentChannel.value = route.params.id;
-    // fetchMessage();
-    if (messageList) console.log(messageList.value);
 
     function showInfo() {
       isShow.value = !isShow.value;
