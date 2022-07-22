@@ -36,123 +36,160 @@
       @scroll.prevent="scrollHandle"
       :class="{ stopScroll: loadingMore }"
     >
-      <div :style="{ background: '#fff' }">
+      <div class="">
         <!-- loading more-->
         <div class="load-more-msg" style="width: 100%">
           <a-spin class="" style="width: 100%" v-if="loadingMore" />
         </div>
-        <!-- msg container-->
         <div
-          class="message-container"
-          :class="{
-            self: item.sender.id == '6801990813180061667',
-            mt16:
-              index &&
-              item.sender.id !=
-                messageList[messageList.length - index].sender.id,
-          }"
+          :style="{ background: '#fff' }"
           v-for="(item, index) in messageList
             ? messageList.slice().reverse()
             : []"
           :key="index"
         >
-          <!-- msg avatar -->
-          <div
-            class="message-avt-container"
-            v-if="
-              item.sender.id != '6801990813180061667' &&
-              (index == 0 ||
-                item.sender.id !=
-                  messageList[messageList.length - index].sender.id)
-            "
-          >
+          <!--msg time-->
+          <div class="massage-container">
             <div
-              class="message-avt"
-              :style="`background-image: url(${item.sender.avatar})`"
-            ></div>
-          </div>
-          <!-- msg content -->
-          <div
-            class="message-content"
-            :class="{
-              ml47:
+              class="msg-chain-time"
+              v-if="
                 index &&
-                item.sender.id ==
+                new Date(item.created_at) -
+                  new Date(
+                    messageList[messageList.length - index].created_at
+                  ) >=
+                  1800000
+              "
+              style="justify"
+            >
+              {{ getTime(item.created_at) }}
+              <!-- <span> {{ new Date(t) | dayjs('YYYY-MM-DD') }} </span> -->
+            </div>
+          </div>
+          <!-- msg container-->
+          <div
+            class="message-container"
+            :class="{
+              self: item.sender.id == '6801990813180061667',
+              mt16:
+                index &&
+                item.sender.id !=
                   messageList[messageList.length - index].sender.id,
             }"
           >
-            <!-- msg name -->
+            <!-- msg avatar -->
             <div
+              class="message-avt-container"
               v-if="
                 item.sender.id != '6801990813180061667' &&
                 (index == 0 ||
-                item.sender.id !=
-                  messageList[messageList.length - index].sender.id)
+                  item.sender.id !=
+                    messageList[messageList.length - index].sender.id ||
+                  new Date(item.created_at) -
+                    new Date(
+                      messageList[messageList.length - index].created_at
+                    ) >=
+                    1800000)
               "
-              class="message-sender"
             >
-              {{ item.sender.fullname }}
-            </div>
-            <!-- msg attachments -->
-            <div class="message-attachments">
               <div
-                v-for="attachment in item.attachments"
-                :key="attachment.id"
-                class="message-attachments-item"
-              >
-                <img
-                  v-if="
-                    attachment.ext == 'jpg' ||
-                    attachment.ext == 'jpeg' ||
-                    attachment.ext == 'png' ||
-                    attachment.ext == 'gif' ||
-                    attachment.ext == 'svg'
-                  "
-                  :src="`${attachment.url}`"
-                  alt=""
-                />
-                <video width="400" v-if="attachment.ext == 'mp4'" controls>
-                  <source :src="`${attachment.url}`" type="video/mp4" />
-                  Your browser does not support HTML video.
-                </video>
-              </div>
+                class="message-avt"
+                :style="`background-image: url(${item.sender.avatar})`"
+              ></div>
             </div>
-            <!-- msg-text -->
+            <!-- msg content -->
             <div
-              v-if="item.text && item.msg_type == 'text'"
-              class="message-text"
+              class="message-content"
               :class="{
-                self: item.sender.id == '6801990813180061667',
-                message_delete: item.text === 'Tin nhắn đã được thu hồi',
+                ml47:
+                  index &&
+                  (item.sender.id ==
+                    messageList[messageList.length - index].sender.id &&
+                    new Date(item.created_at) -
+                      new Date(
+                        messageList[messageList.length - index].created_at
+                      ) <
+                      1800000),
               }"
-              v-html="urlify(item.text)"
-            ></div>
-            <!-- msg-forward -->
-            <div
-              v-if="item.msg_type == 'quote_message'"
-              class="message-forward"
-              :class="{ self: item.sender.id == '6801990813180061667' }"
             >
-              <!-- msg-forward-icon -->
-              <div class="message-forward-icon">
-                <double-right-outlined />
+              <!-- msg name -->
+              <div
+                v-if="
+                  item.sender.id != '6801990813180061667' &&
+                  (index == 0 ||
+                    item.sender.id !=
+                      messageList[messageList.length - index].sender.id ||
+                    new Date(item.created_at) -
+                      new Date(
+                        messageList[messageList.length - index].created_at
+                      ) >=
+                      1800000)
+                "
+                class="message-sender"
+              >
+                {{ item.sender.fullname }}
               </div>
-              <!-- msg-forward-des -->
-              <div class="message-forward-des">
+              <!-- msg attachments -->
+              <div class="message-attachments">
                 <div
-                  class="message-forward_text"
-                  v-html="urlify(item.quote_message.text)"
-                ></div>
-                <div class="message-forward-info">
-                  {{ item.quote_message.sender.fullname }},
-                  {{ getTime(item.quote_message.created_at) }}
+                  v-for="attachment in item.attachments"
+                  :key="attachment.id"
+                  class="message-attachments-item"
+                >
+                  <img
+                    v-if="
+                      attachment.ext == 'jpg' ||
+                      attachment.ext == 'jpeg' ||
+                      attachment.ext == 'png' ||
+                      attachment.ext == 'gif' ||
+                      attachment.ext == 'svg'
+                    "
+                    :src="`${attachment.url}`"
+                    alt=""
+                  />
+                  <video width="400" v-if="attachment.ext == 'mp4'" controls>
+                    <source :src="`${attachment.url}`" type="video/mp4" />
+                    Your browser does not support HTML video.
+                  </video>
                 </div>
               </div>
-              <!-- msg-forward-text -->
+              <!-- msg-text -->
               <div
-                class="message-forward-text"
+                v-if="item.text && item.msg_type == 'text'"
+                class="message-text"
+                :class="{
+                  self: item.sender.id == '6801990813180061667',
+                  message_delete: item.text === 'Tin nhắn đã được thu hồi',
+                }"
                 v-html="urlify(item.text)"
               ></div>
+              <!-- msg-forward -->
+              <div
+                v-if="item.msg_type == 'quote_message'"
+                class="message-forward"
+                :class="{ self: item.sender.id == '6801990813180061667' }"
+              >
+                <!-- msg-forward-icon -->
+                <div class="message-forward-icon">
+                  <double-right-outlined />
+                </div>
+                <!-- msg-forward-des -->
+                <div class="message-forward-des">
+                  <div
+                    class="message-forward_text"
+                    v-html="urlify(item.quote_message.text)"
+                  ></div>
+                  <div class="message-forward-info">
+                    {{ item.quote_message.sender.fullname }},
+                    {{ getTimeQuote(item.quote_message.created_at) }}
+                  </div>
+                </div>
+                <!-- msg-forward-text -->
+                <div
+                  class="message-forward-text"
+                  v-html="urlify(item.text)"
+                ></div>
+              </div>
             </div>
           </div>
         </div>
@@ -204,9 +241,9 @@
   </div>
   <!-- chatinfor -->
   <div
-    v-if="!loadingChannelInfo"
+    v-if="channelInfoList.data"
     class="chat-info"
-    style="width: 30%"
+    style="width: 375px"
     :class="{ chatinfobtn: isShow, loading: loading || loadingChannelInfo }"
   >
     <div class="info-container" v-if="clickButton">
@@ -530,7 +567,7 @@ export default {
       return number < 10 ? "0" + number : number;
     }
 
-    function getTime(date) {
+    function getTimeQuote(date) {
       let d = new Date(date);
       let time;
       time =
@@ -570,6 +607,41 @@ export default {
       }
     }
 
+    function normalizeDate(number) {
+      return number < 10 ? "0" + number : number;
+    }
+
+    function getTime(date) {
+      let d = new Date(date);
+      let today = new Date();
+      let time;
+      if (d.getDate() === today.getDate()) {
+        time =
+          "Hôm nay, " +
+          normalizeDate(d.getHours()) +
+          ":" +
+          normalizeDate(d.getMinutes());
+      } else if (d.getDate() + 1 === today.getDate()) {
+        time =
+          "Hôm qua, " +
+          normalizeDate(d.getHours()) +
+          ":" +
+          normalizeDate(d.getMinutes());
+      } else {
+        time =
+          normalizeDate(d.getDate()) +
+          "/" +
+          normalizeDate(d.getMonth() + 1) +
+          "/" +
+          d.getFullYear() +
+          ", " +
+          normalizeDate(d.getHours()) +
+          ":" +
+          normalizeDate(d.getMinutes());
+      }
+      return time;
+    }
+
     function onFileSelected(e) {
       selectFiles.value.push(e.target.files[0]);
       console.log(selectFiles.value);
@@ -586,6 +658,7 @@ export default {
       isShow,
       urlify,
       getTime,
+      getTimeQuote,
       scrollHandle,
       onFileSelected,
       channelInfoList,

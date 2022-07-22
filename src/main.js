@@ -4,9 +4,6 @@ import 'ant-design-vue/dist/antd.css';
 import router from "./router";
 import "./assets/styles/main.css"
 import "./assets/styles/chat-info.css"
-import InfiniteScroll from 'v-infinite-scroll'
- 
-import 'v-infinite-scroll/dist/v-infinite-scroll.css'
  
 import { createPinia } from 'pinia';
 
@@ -18,7 +15,6 @@ import {
 } from 'ant-design-vue'
 
 const app = createApp(App);
-app.use(InfiniteScroll)
 app.use(Layout);
 app.use(List);
 app.use(Spin);

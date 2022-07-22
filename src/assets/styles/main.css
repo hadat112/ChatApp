@@ -220,6 +220,7 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
+    z-index: 1;
 }
 
 i.ant-spin-dot-item {
@@ -254,6 +255,15 @@ i.ant-spin-dot-item {
 
 .stopScoll {
     overflow: hidden;
+}
+
+.msg-chain-time {
+    color: hsla(0,0%,55.7%,.8);
+    font-size: 12px;
+    display: flex;
+    justify-self: center;
+    justify-content: center;
+    margin: 5px 24px 5px;
 }
 
 .message-container {

@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="channel-list-wrapper" :class="{ loading: loading }">
-      <div v-for="(item, index) in channelList.data" :key="index" class="">
+      <div v-for="(item, index) in channelList" :key="index" class="">
         <router-link
           :to="`${item.channel_id}`"
           :key="$route.fullPath"
