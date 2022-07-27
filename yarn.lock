@@ -210,9 +210,15 @@
   "resolved" "https://registry.npmjs.org/dom-scroll-into-view/-/dom-scroll-into-view-2.0.1.tgz"
   "version" "2.0.1"
 
+<<<<<<< HEAD
 "esbuild-linux-64@0.14.48":
   "integrity" "sha512-vni3p/gppLMVZLghI7oMqbOZdGmLbbKR23XFARKnszCIBpEMEDxOMNIKPmMItQrmH/iJrL1z8Jt2nynY0bE1ug=="
   "resolved" "https://registry.npmjs.org/esbuild-linux-64/-/esbuild-linux-64-0.14.48.tgz"
+=======
+"esbuild-darwin-64@0.14.48":
+  "integrity" "sha512-gGQZa4+hab2Va/Zww94YbshLuWteyKGD3+EsVon8EWTWhnHFRm5N9NbALNbwi/7hQ/hM1Zm4FuHg+k6BLsl5UA=="
+  "resolved" "https://registry.npmjs.org/esbuild-darwin-64/-/esbuild-darwin-64-0.14.48.tgz"
+>>>>>>> master
   "version" "0.14.48"
 
 "esbuild@^0.14.27":
@@ -246,6 +252,14 @@
   "resolved" "https://registry.npmjs.org/estree-walker/-/estree-walker-2.0.2.tgz"
   "version" "2.0.2"
 
+<<<<<<< HEAD
+=======
+"fsevents@~2.3.2":
+  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
+  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
+  "version" "2.3.2"
+
+>>>>>>> master
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
   "resolved" "https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz"
@@ -394,6 +408,14 @@
   "resolved" "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   "version" "1.0.0"
 
+<<<<<<< HEAD
+=======
+"v-infinite-scroll@^1.0.4":
+  "integrity" "sha512-o2PeC0LNh3nSpsak+tcJEPRj9ENWWZTFvp1JdsraOom/d7lEbj7QfsJuF56AyrkqdSszaAwiVq2h4xTayl3RtQ=="
+  "resolved" "https://registry.npmjs.org/v-infinite-scroll/-/v-infinite-scroll-1.0.4.tgz"
+  "version" "1.0.4"
+
+>>>>>>> master
 "vite@^2.5.10", "vite@^2.9.9":
   "integrity" "sha512-P/UCjSpSMcE54r4mPak55hWAZPlyfS369svib/gpmz8/01L822lMPOJ/RYW6tLCe1RPvMvOsJ17erf55bKp4Hw=="
   "resolved" "https://registry.npmjs.org/vite/-/vite-2.9.14.tgz"

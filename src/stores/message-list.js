@@ -3,19 +3,59 @@ import { defineStore } from 'pinia'
 export const useMessageStore = defineStore('messages', {
   state: () => {
     return {
-      messageList: []
+      messageList: [],
+      currentChannel: null,
+      loading: false,
+      error: null,
+      limit: 40,
+      token: "c_xmompcdoxhahcn3nrg8m3scnvmmctmvmxrqswhqcaxeb8ofqje9oab2g945bli17" 
     }
   },
   actions: {
-    async fetchMessage(channelId, limit) {
-      const token = "c_dorde02ctke00y7bqpe1ojqmzemtyfekb96zkyxkob86k2tlp5xvifbxrko5uopa";
-      const url = `https://chat.ghtk.vn/api/v3/messages?channel_id=${channelId}&limit=${limit}`
-      this.messageList = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => res.json())
+    async fetchMessage() {
+      this.loading = true;
+      const url = `https://chat.ghtk.vn/api/v3/messages?channel_id=${this.currentChannel}&limit=${this.limit}`
+      try {
+        this.messageList = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+          .then((res) => res.json())
+      } catch (err) {
+        this.error = err;
+      } finally {
+        this.loading = false;
+      }
     },
+    async sendMessage(messageInput, selecteFiles) {
+      // let formData = new FormData();
+      // formData.append('attachment', []);
+      // formData.append('channel_id', "1676242464193100389");
+      // formData.append('mentions', []);
+      // formData.append('msg_type', "text");
+      // formData.append('ref_id', "1Pq2InaSrMP696rGQza5");
+      // formData.append('text', "messageInput");
+
+      const data = {
+        attachment: [],
+        channel_id: `${this.currentChannel}`,
+        mentions: [],
+        msg_type: "text",
+        ref_id: "1Pq2InPErMP696rGQza5",
+        text: `${messageInput}`,
+      }
+
+      await fetch("https://chat.ghtk.vn/api/v3/messages", {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).then(res => res.json())
+        .catch(err => console.log(err));
+      await this.fetchMessage();
+    }
   },
 })

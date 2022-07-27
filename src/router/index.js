@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useMessageStore } from "../stores/message-list";
 
 const routes = [
     {
       path: "/:id?",
-      name: "home",
+      name: "chat",
       component: () =>
-        import( "../pages/chat.vue")
+        import( "../pages/chat.vue"),
     },
   ];
   
@@ -14,4 +15,12 @@ const routes = [
     routes,
   });
   
-  export default router;
+  router.beforeEach((to, from, next) => {
+    const store = useMessageStore();
+    store.limit = 40;
+    store.currentChannel = to.params.id
+    store.fetchMessage();
+    next();
+  })
+
+export default router;

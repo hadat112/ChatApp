@@ -4,11 +4,14 @@ export const useChannelStore = defineStore('channels', {
     state: () => {
         return {
           channelList: [],
+          loading: false,
+          error: null
         }
       },
       actions: {
         async fetchChannel() {
-            const token = "c_dorde02ctke00y7bqpe1ojqmzemtyfekb96zkyxkob86k2tlp5xvifbxrko5uopa";
+          this.loading = true;
+            const token = "c_xmompcdoxhahcn3nrg8m3scnvmmctmvmxrqswhqcaxeb8ofqje9oab2g945bli17";
             const url = "https://chat.ghtk.vn/api/v3/channels?tag_id=930203%2C930205&group_id=1&limit=40"
             this.channelList = await fetch(url, {
               headers: {
@@ -16,7 +19,8 @@ export const useChannelStore = defineStore('channels', {
               },
             })
               .then((res) => res.json())
-            // console.log(this.channelList);
+              .catch((err) => this.error= err)
+              .finally(() => this.loading = false);
         },
       },
 })

@@ -5,17 +5,19 @@ import 'ant-design-vue/dist/antd.css';
 import router from "./router";
 import { createPinia } from 'pinia';
 import '/home/tranhuyhoan/Documents/GitHub/ChatApp/src/assets/styles/chat-info.css';
-
+import "./assets/styles/main.css"
 import {
     Layout,
     List,
     PageHeader,
+    Spin
 } from 'ant-design-vue'
 
 const app = createApp(App);
 
 app.use(Layout);
 app.use(List);
+app.use(Spin);
 app.use(PageHeader);
 app.use(router);
 app.use(createPinia());
