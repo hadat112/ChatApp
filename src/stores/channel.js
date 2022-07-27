@@ -11,7 +11,7 @@ export const useChannelStore = defineStore('channels', {
       actions: {
         async fetchChannel() {
           this.loading = true;
-            const token = "c_xmompcdoxhahcn3nrg8m3scnvmmctmvmxrqswhqcaxeb8ofqje9oab2g945bli17";
+            const token = "c_0jlvkoo7gaagtlorhivimika0lpnmaysyfh8jxfjqottwcgigrt3cmiaf6afmab4";
             const url = "https://chat.ghtk.vn/api/v3/channels?tag_id=930203%2C930205&group_id=1&limit=40"
             this.channelList = await fetch(url, {
               headers: {
