@@ -10,7 +10,7 @@ export const useChannelInfoStore = defineStore('channelInfo', {
       actions: {
         async fetchChannelInfo(channelId) {
           this.loadingChannelInfo = true;
-            const token = "c_2was5vgocccferhuqkpwnazegzjroeai1mnz6tppbfnbsclq0uwp7eis23meonyy";
+            const token = "c_bstkixaqbbom7ajaa5j8wn64px31tzmm8zilmj9anlh64rsiuxeketusxye3ri6c";
             const url = `https://chat.ghtk.vn/api/v3/channels/info?channel_id=${channelId}`
             try {
               this.channelInfoList = await fetch(url, {

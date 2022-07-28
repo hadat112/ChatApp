@@ -391,6 +391,25 @@ i.ant-spin-dot-item {
     padding: 6px 24px;
 }
 
+.footer-expand {
+    display: flex;
+}
+
+.footer-expand .footer-preview-img {
+    margin: 4px 16px 12px 0;
+}
+
+.footer-preview-img {
+    width: 104px;
+    height: 104px;
+}
+
+.footer-preview-img img {
+    width: 104px;
+    height: 104px;
+    object-fit: cover;
+}
+
 .footer-input {
     align-items: center;
     display: flex;

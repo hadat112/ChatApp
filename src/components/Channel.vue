@@ -99,6 +99,7 @@ export default {
       }
       return time;
     }
+    
     return {
       channelList,
       getTime,

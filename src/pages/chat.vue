@@ -197,7 +197,12 @@
     </a-layout-content>
     <!-- sider -->
     <a-layout-footer>
-      <div class="footer-expand"></div>
+      <!-- msg-preview-img -->
+      <div class="footer-expand">
+        <div class="footer-preview-img" v-for="(item, index) in filesUrl" :key="index">
+          <img :src="item" alt="">
+        </div>
+      </div>
       <form @submit.prevent="sendMessageHandle">
         <div class="footer-input">
           <div class="message-more">
@@ -231,7 +236,7 @@
           <button
             type="submit"
             class="send-btn"
-            :class="{ active: messageInput }"
+            :class="{ active: messageInput ||  selectFiles[0]}"
           >
             <send-outlined />
           </button>
@@ -239,6 +244,8 @@
       </form>
     </a-layout-footer>
   </div>
+
+
   <!-- chatinfor -->
   <div
     v-if="channelInfoList.data"
@@ -538,12 +545,14 @@ export default {
     const { channelInfoList, loadingChannelInfo } = storeToRefs(
       useChannelInfoStore()
     );
+
     const { fetchChannelInfo } = useChannelInfoStore();
     // console.log(channelInfoList.value.data.channel_type)
     let clickButton = ref(true);
     const isShow = ref(true);
     let messageInput = ref("");
     let selectFiles = ref([]);
+    const filesUrl = ref([]);
     currentChannel.value = route.params.id;
 
     let extraInfo = () => {
@@ -590,6 +599,7 @@ export default {
         await sendMessage(messageInput.value, selectFiles.value);
       messageInput.value = "";
       selectFiles.value = [];
+      filesUrl.value = [];
     }
 
     async function scrollHandle(e) {
@@ -644,7 +654,8 @@ export default {
 
     function onFileSelected(e) {
       selectFiles.value.push(e.target.files[0]);
-      console.log(selectFiles.value);
+      filesUrl.value.push(URL.createObjectURL(e.target.files[0]))
+      console.log(filesUrl.value);
     }
 
     return {
@@ -661,6 +672,8 @@ export default {
       getTimeQuote,
       scrollHandle,
       onFileSelected,
+      filesUrl,
+      selectFiles,
       channelInfoList,
       extraInfo,
       clickButton,
