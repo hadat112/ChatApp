@@ -20,6 +20,8 @@ export const useMessageStore = defineStore('messages', {
 
       const url1 = `https://chat.ghtk.vn/api/v3/messages?channel_id=${this.currentChannel}&before=${this.before}&limit=${this.limit}`
       const url = `https://chat.ghtk.vn/api/v3/messages?channel_id=${this.currentChannel}&limit=${this.limit}`
+      // const socket = io(url1)
+      // console.log(socket);
       try {
         let messages = await fetch(url1, {
           headers: {
@@ -34,7 +36,7 @@ export const useMessageStore = defineStore('messages', {
       } finally {
         this.loading = false;
       }
-      console.log(this.messageList);
+      // console.log(this.messageList);
     },
 
     async fetchMore() {

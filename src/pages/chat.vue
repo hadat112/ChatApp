@@ -165,7 +165,7 @@
               ></div>
               <!-- msg-forward -->
               <div
-                v-if="item.msg_type == 'quote_message'"
+                v-if="item.msg_type == 'forward_message'"
                 class="message-forward"
                 :class="{ self: item.sender.id == '6801990813180061667' }"
               >
@@ -195,12 +195,20 @@
         </div>
       </div>
     </a-layout-content>
-    <!-- sider -->
+    <!-- footer -->
     <a-layout-footer>
       <!-- msg-preview-img -->
       <div class="footer-expand">
         <div class="footer-preview-img" v-for="(item, index) in filesUrl" :key="index">
           <img :src="item" alt="">
+          <span>
+            <!-- <a href="">
+              <eye-outlined />
+            </a> -->
+            <button class="delete-preview">
+              <delete-outlined />
+            </button>
+          </span>
         </div>
       </div>
       <form @submit.prevent="sendMessageHandle">
@@ -244,7 +252,6 @@
       </form>
     </a-layout-footer>
   </div>
-
 
   <!-- chatinfor -->
   <div
@@ -506,6 +513,8 @@ import {
   SettingOutlined,
   LeftOutlined,
   UserAddOutlined,
+  DeleteOutlined,
+  EyeOutlined
 } from "@ant-design/icons-vue";
 import { useMessageStore } from "../stores/message-list.js";
 import { useChannelInfoStore } from "../stores/channel-info.js";
@@ -534,6 +543,8 @@ export default {
     SettingOutlined,
     LeftOutlined,
     UserAddOutlined,
+    DeleteOutlined,
+    EyeOutlined
   },
   setup() {
     const route = useRoute();
@@ -655,7 +666,6 @@ export default {
     function onFileSelected(e) {
       selectFiles.value.push(e.target.files[0]);
       filesUrl.value.push(URL.createObjectURL(e.target.files[0]))
-      console.log(filesUrl.value);
     }
 
     return {

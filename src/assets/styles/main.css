@@ -299,6 +299,11 @@ i.ant-spin-dot-item {
     font-size: 12px;
 }
 
+.message-attachments {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
 .message-attachments-item{
     max-width: 450px;
     max-height: 300px;
@@ -402,12 +407,40 @@ i.ant-spin-dot-item {
 .footer-preview-img {
     width: 104px;
     height: 104px;
+    position: relative;
 }
 
 .footer-preview-img img {
     width: 104px;
     height: 104px;
     object-fit: cover;
+    opacity: 0.9;
+}
+
+.footer-preview-img:hover {
+    opacity: 0.7;
+}
+
+.footer-preview-img span {
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    visibility: hidden;
+    z-index: 10;
+}
+
+
+
+.footer-preview-img:hover span {
+    visibility: visible;
+}
+
+.delete-preview {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 .footer-input {
