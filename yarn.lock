@@ -210,7 +210,10 @@
   "resolved" "https://registry.npmjs.org/dom-scroll-into-view/-/dom-scroll-into-view-2.0.1.tgz"
   "version" "2.0.1"
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
 "esbuild-linux-64@0.14.48":
   "integrity" "sha512-vni3p/gppLMVZLghI7oMqbOZdGmLbbKR23XFARKnszCIBpEMEDxOMNIKPmMItQrmH/iJrL1z8Jt2nynY0bE1ug=="
   "resolved" "https://registry.npmjs.org/esbuild-linux-64/-/esbuild-linux-64-0.14.48.tgz"
@@ -252,6 +255,7 @@
   "resolved" "https://registry.npmjs.org/estree-walker/-/estree-walker-2.0.2.tgz"
   "version" "2.0.2"
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 =======
 "fsevents@~2.3.2":
@@ -260,6 +264,8 @@
   "version" "2.3.2"
 
 >>>>>>> master
+=======
+>>>>>>> Stashed changes
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
   "resolved" "https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz"

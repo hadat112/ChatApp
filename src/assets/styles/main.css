@@ -15,6 +15,10 @@
     margin-left: 47px;
 }
 
+.mt16 {
+    margin-top: 16px !important;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -39,6 +43,7 @@ body {
 /* sider */
 .ant-layout {
     height: 100%;
+    width: 100%;
 }
 
 .ant-layout-sider {
@@ -52,10 +57,11 @@ body {
 }
 
 .header-channel-list {
+    align-items: center;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 16px;
+    margin-bottom: 4px;
+    padding: 8px 20px 8px 12px;
     font-size: 22px;
     font-weight: 700;
 }
@@ -67,7 +73,7 @@ body {
 }
 
 .channel-input-search {
-    margin: 0 8px 8px 8px;
+    margin: 0 8px;
     height: 44px;
 }
 
@@ -78,6 +84,22 @@ body {
     height: inherit;
     padding: 8px;
     width: 100%;
+}
+
+.channel-tool {
+    color: #069255;
+    display: flex;
+    justify-content: space-between;
+    font-size: 17px;
+    margin: 6px 8px;
+}
+
+.channel-tool-create {
+    cursor: pointer;
+}
+
+.channel-tool-actions {
+    cursor: pointer;
 }
 
 .channel-list-wrapper {
@@ -117,6 +139,47 @@ body {
     flex: 1;
 }
 
+.avatar-group {
+    position: relative;
+    margin: 2px;
+  }
+  .avatar-group img {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transform: rotate(-40deg);
+    font-size: 12.8px;
+  }
+  .avatar {
+    transform: rotate(-45deg);
+  }
+
+  .group-avatar {
+    display: flex;
+    position: relative;
+  }
+  .group{
+    align-content: center;
+  }
+  .number_participants {
+    color: #fff;
+    font-weight: bold;
+    display: inline-block;
+    justify-content: center;
+    position: absolute;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.397);
+    padding-left: 10px;
+    padding-top: 8px;
+    border-radius: 50%;
+    box-shadow: 0 0 2px 0 #eee;
+    min-width: 40px;
+    height: 40px;
+    margin-top: 15%;
+  
+  }
+
 .channel-content {
     display: flex;
     padding-left: 10px;
@@ -140,7 +203,7 @@ body {
 }
 
 .channel-last-msg a {
-    color: #069255;
+    color: #14a05b;
 }
 
 .channel-text {
@@ -172,6 +235,7 @@ body {
 /* chat-view */
 .ant-layout > .ant-layout {
     flex-direction: row;
+    position: relative;
     width: 100%;
 }
 
@@ -197,7 +261,6 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-
 }
 
 i.ant-spin-dot-item {
@@ -205,8 +268,21 @@ i.ant-spin-dot-item {
 }
 
 .ant-page-header {
-    padding: 0 20px;
     border-bottom: 1px solid rgb(235, 237, 240);
+    padding: 0 20px;
+}
+
+.ant-page-header-heading-left {
+    margin: 10px 0 8px;
+    align-items: baseline;
+}
+
+.ant-page-header-heading-title {
+    font-weight: 700;
+}
+
+.ant-page-header-heading-extra {
+    display: flex;
 }
 
 .ant-layout-content {
@@ -215,6 +291,10 @@ i.ant-spin-dot-item {
     display: flex;
     flex-direction: column-reverse;
     margin-bottom: 24px;
+}
+
+.stopScoll {
+    overflow: hidden;
 }
 
 .message-container {
@@ -239,7 +319,7 @@ i.ant-spin-dot-item {
 }
 
 .message-content {
-    max-width: 60%;
+    max-width: 56%;
     display: flex;
     flex-direction: column;
 }
@@ -258,9 +338,22 @@ i.ant-spin-dot-item {
 }
 
 .message-attachments-item img{
+    max-width: 450px;
+    max-height: 300px;
+    min-height: 100px;
+    height: 100%;
+    width: 100%;    
+    border-radius: 10px;
+    border: 0.5px solid #ccc;
+    object-fit: cover;
+}
+
+.message-attachments-item video{
+    width: auto;
+    height: 250px;
     max-width: 100%;
     max-height: 300px;
-    height: auto;
+    object-fit: cover;
     border-radius: 10px;
     border: 0.5px solid #ccc;
 }
@@ -325,7 +418,7 @@ i.ant-spin-dot-item {
 
 .ant-layout-footer {
     background-color: #fff;
-    border-top: 1px solid rgb(179, 185, 194);
+    border-top: 0.5px solid rgb(235, 237, 240);
     padding: 6px 24px;
 }
 
@@ -402,5 +495,5 @@ i.ant-spin-dot-item {
 }
 
 .chatinfobtn {
-    display: none;
+    display: none !important;
 }
