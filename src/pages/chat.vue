@@ -611,5 +611,28 @@ export default {
 </script>;
 
 <style>
+.group-avatar {
+  display: flex;
+  position: relative;
+}
+.group{
+  align-content: center;
+}
+.number_participants {
+  color: #fff;
+  font-weight: bold;
+  display: inline-block;
+  justify-content: center;
+  position: absolute;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.397);
+  padding-left: 10px;
+  padding-top: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 2px 0 #eee;
+  min-width: 40px;
+  height: 40px;
+  margin-top: 15%;
 
+}
 </style>

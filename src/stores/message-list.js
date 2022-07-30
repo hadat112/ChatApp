@@ -8,9 +8,8 @@ export const useMessageStore = defineStore('messages', {
       loading: false,
       loadingMore: false,
       error: null,
-      limit: 20,
-      before: 0,
-      token: "c_nuuen7mcl2nmxpqeh6el0cyb1adct5tqn85zvt0iy1ks3jzbxaobhtvtm5ltbxsu"
+      limit: 40,
+      token: "c_0jlvkoo7gaagtlorhivimika0lpnmaysyfh8jxfjqottwcgigrt3cmiaf6afmab4" 
     }
   },
   actions: {
