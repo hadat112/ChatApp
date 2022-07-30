@@ -13,7 +13,10 @@
         :sub-title="`${channelInfoList.data.partner.position_name}`"
       >
         <template #extra>
-          <button @click="showInfo" style="background: #fff; border: none">
+          <button
+            @click="showInfo"
+            style="background: #fff; border: none; outline: none"
+          >
             <ellipsis-outlined style="font-size: 28px; color: #a4a4a4" />
           </button>
         </template>
@@ -36,6 +39,7 @@
       @scroll.prevent="scrollHandle"
       :class="{ stopScroll: loadingMore }"
     >
+      <span class="scroll-start-at-top"></span>
       <div class="">
         <!-- loading more-->
         <div class="load-more-msg" style="width: 100%">
@@ -103,13 +107,13 @@
               :class="{
                 ml47:
                   index &&
-                  (item.sender.id ==
+                  item.sender.id ==
                     messageList[messageList.length - index].sender.id &&
-                    new Date(item.created_at) -
-                      new Date(
-                        messageList[messageList.length - index].created_at
-                      ) <
-                      1800000),
+                  new Date(item.created_at) -
+                    new Date(
+                      messageList[messageList.length - index].created_at
+                    ) <
+                    1800000,
               }"
             >
               <!-- msg name -->
@@ -136,7 +140,7 @@
                   :key="attachment.id"
                   class="message-attachments-item"
                 >
-                  <img
+                  <a-image
                     v-if="
                       attachment.ext == 'jpg' ||
                       attachment.ext == 'jpeg' ||
@@ -199,13 +203,17 @@
     <a-layout-footer>
       <!-- msg-preview-img -->
       <div class="footer-expand">
-        <div class="footer-preview-img" v-for="(item, index) in filesUrl" :key="index">
-          <img :src="item" alt="">
+        <div
+          class="footer-preview-img"
+          v-for="(item, index) in filesUrl"
+          :key="index"
+        >
+          <img :src="item" alt="" />
           <span>
             <!-- <a href="">
               <eye-outlined />
             </a> -->
-            <button class="delete-preview">
+            <button class="delete-preview" @click="deletePreview(index)">
               <delete-outlined />
             </button>
           </span>
@@ -244,7 +252,7 @@
           <button
             type="submit"
             class="send-btn"
-            :class="{ active: messageInput ||  selectFiles[0]}"
+            :class="{ active: messageInput || selectFiles[0] }"
           >
             <send-outlined />
           </button>
@@ -514,13 +522,14 @@ import {
   LeftOutlined,
   UserAddOutlined,
   DeleteOutlined,
-  EyeOutlined
+  EyeOutlined,
 } from "@ant-design/icons-vue";
 import { useMessageStore } from "../stores/message-list.js";
 import { useChannelInfoStore } from "../stores/channel-info.js";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
+import { useChannelStore } from "../stores/channel.js";
 
 export default {
   components: {
@@ -544,7 +553,7 @@ export default {
     LeftOutlined,
     UserAddOutlined,
     DeleteOutlined,
-    EyeOutlined
+    EyeOutlined,
   },
   setup() {
     const route = useRoute();
@@ -552,6 +561,8 @@ export default {
     let { messageList, loading, loadingMore, error, limit, currentChannel } =
       storeToRefs(useMessageStore());
     const { fetchMessage, fetchMore, sendMessage } = useMessageStore();
+
+    const { channelList } = storeToRefs(useChannelStore());
 
     const { channelInfoList, loadingChannelInfo } = storeToRefs(
       useChannelInfoStore()
@@ -565,6 +576,43 @@ export default {
     let selectFiles = ref([]);
     const filesUrl = ref([]);
     currentChannel.value = route.params.id;
+
+    const ws = new WebSocket(
+      "wss://ws.ghtk.vn/ws/chat?Authorization=c_9pvt7zjguoe6bpz7anisrh5ymtrzkckne73srm6mjqk9clzcfocicirmz1edjq1t&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats"
+    );
+
+    ws.onopen = function () {
+      ws.send(
+        "c_w7t3uynrn9ekd2mor8oasahmlhqagauhgzubek8jwt1hi89fnrb2ho9f6zt0unrj|sub|chats_user_6801990813180061667"
+      );
+    };
+
+    ws.onmessage = function (event) {
+      let message = JSON.parse(event.data);
+      console.log(message);
+      if (message.event === "message") {
+        // console.log(messageList);
+        messageList.value.unshift({
+          channel_id: message.data.channel_id,
+          channel_mode: message.data.channel_mode,
+          channel_type: message.data.channel_type,
+          created_at: message.data.created_at,
+          id: message.data.id,
+          is_pin: message.data.is_pin,
+          msg_type: message.data.msg_type,
+          ref_id: message.data.ref_id,
+          score: message.data.score,
+          sender: message.data.sender,
+          status: message.data.status,
+          text: message.data.text,
+          total_seen: message.data.total_seen,
+        });
+
+        console.log(channelList);
+        fetchChannel();
+        // fetchMessage();
+      }
+    };
 
     let extraInfo = () => {
       clickButton.value = !clickButton.value;
@@ -665,7 +713,12 @@ export default {
 
     function onFileSelected(e) {
       selectFiles.value.push(e.target.files[0]);
-      filesUrl.value.push(URL.createObjectURL(e.target.files[0]))
+      filesUrl.value.push(URL.createObjectURL(e.target.files[0]));
+    }
+
+    function deletePreview(index) {
+      filesUrl.value.splice(index, 1);
+      selectFiles.value.splice(index, 1);
     }
 
     return {
@@ -687,6 +740,7 @@ export default {
       channelInfoList,
       extraInfo,
       clickButton,
+      deletePreview,
     };
   },
 };

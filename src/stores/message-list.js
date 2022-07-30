@@ -11,7 +11,7 @@ export const useMessageStore = defineStore('messages', {
       error: null,
       limit: 20,
       before: 0,
-      token: "c_bstkixaqbbom7ajaa5j8wn64px31tzmm8zilmj9anlh64rsiuxeketusxye3ri6c"
+      token: "c_w7t3uynrn9ekd2mor8oasahmlhqagauhgzubek8jwt1hi89fnrb2ho9f6zt0unrj"
     }
   },
   actions: {
@@ -67,30 +67,10 @@ export const useMessageStore = defineStore('messages', {
       selecteFiles.forEach(file => {
         formData.append('attachment', file);
       });
-      formData.append('channel_id', '1676242464193100389');
+      formData.append('channel_id', this.currentChannel);
       formData.append('msg_type', "text");
       formData.append('ref_id', "1Pq2InaSrMP696rGQza5");
       formData.append('text', messageInput);
-
-      // const data = {
-      //   attachment: [],
-      //   channel_id: `${this.currentChannel}`,
-      //   mentions: [],
-      //   msg_type: "text",
-      //   ref_id: "1Pq2InPErMP696rGQza5",
-      //   text: `${messageInput}`,
-      // }
-
-      // await fetch("https://chat.ghtk.vn/api/v3/messages", {
-      //   method: 'POST',
-      //   headers: {
-      //     Authorization: `Bearer ${this.token}`,
-      //     'Content-Type': 'multipart/form-data'
-      //   },
-      //   body: formData
-      // }).then(res => res.json())
-      //   .catch(err => console.log(err));
-      // await this.fetchMessage();
 
       await axios.post('https://chat.ghtk.vn/api/v3/messages', formData, {
         headers: {

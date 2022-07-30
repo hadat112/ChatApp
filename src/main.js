@@ -11,7 +11,8 @@ import {
     Layout,
     List,
     PageHeader,
-    Spin
+    Spin,
+    Image
 } from 'ant-design-vue'
 
 const app = createApp(App);
@@ -19,6 +20,7 @@ app.use(Layout);
 app.use(List);
 app.use(Spin);
 app.use(PageHeader);
+app.use(Image);
 app.use(router);
 app.use(createPinia());
 app.mount('#app');

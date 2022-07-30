@@ -253,6 +253,10 @@ i.ant-spin-dot-item {
     margin-bottom: 24px;
 }
 
+.scroll-start-at-top {
+    flex: 1 1 0%;
+}
+
 .stopScoll {
     overflow: hidden;
 }
