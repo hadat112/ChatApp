@@ -4,11 +4,15 @@
       <input type="text" placeholder="Tìm kiếm" />
     </div>
     <div class="channel-tool">
-      <div class="channel-tool-create"><plus-outlined />Chats</div>
-      <div class="channel-tool-actions">Thao tác</div>
+      <div class="channel-tool-create">
+        <plus-outlined />Chats
+      </div>
+      <div class="channel-tool-actions">
+        Thao tác 
+      </div>
     </div>
     <div class="channel-list-wrapper" :class="{ loading: loading }">
-      <div v-for="(item, index) in channelList.data" :key="index" class="">
+      <div v-for="(item, index) in channelList" :key="index" class="">
         <router-link
           :to="`${item.channel_id}`"
           :key="$route.fullPath"
@@ -65,10 +69,11 @@
 import { useChannelStore } from "../stores/channel.js";
 import { useChannelInfoStore } from "../stores/channel-info.js";
 import { storeToRefs } from "pinia";
-import { PlusOutlined } from "@ant-design/icons-vue";
+import {  PlusOutlined } from "@ant-design/icons-vue";
+
 export default {
   components: {
-    PlusOutlined,
+    PlusOutlined
   },
   setup() {
     const { channelList, loading, error } = storeToRefs(useChannelStore());
@@ -105,6 +110,7 @@ export default {
       }
       return time;
     }
+    
     return {
       channelList,
       getTime,
