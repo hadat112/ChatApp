@@ -27,7 +27,10 @@
         :sub-title="`${channelInfoList.data.count_member} thành viên`"
       >
         <template #extra>
-          <button @click="showInfo" style="background: #fff; border: none">
+          <button
+            @click="showInfo"
+            style="background: #fff; border: none; outline: none"
+          >
             <ellipsis-outlined style="font-size: 28px; color: #a4a4a4" />
           </button>
         </template>
@@ -36,6 +39,7 @@
     </a-layout-header>
     <!-- content -->
     <a-layout-content
+      id="layout-content"
       @scroll.prevent="scrollHandle"
       :class="{ stopScroll: loadingMore }"
     >
@@ -165,7 +169,7 @@
                   self: item.sender.id == '6801990813180061667',
                   message_delete: item.text === 'Tin nhắn đã được thu hồi',
                 }"
-                v-html="urlify(item.text)"
+                v-html="markedText(item.text)"
               ></div>
               <!-- msg-forward -->
               <div
@@ -181,7 +185,7 @@
                 <div class="message-forward-des">
                   <div
                     class="message-forward_text"
-                    v-html="urlify(item.quote_message.text)"
+                    v-html="markedText(item.quote_message.text)"
                   ></div>
                   <div class="message-forward-info">
                     {{ item.quote_message.sender.fullname }},
@@ -191,7 +195,7 @@
                 <!-- msg-forward-text -->
                 <div
                   class="message-forward-text"
-                  v-html="urlify(item.text)"
+                  v-html="markedText(item.text)"
                 ></div>
               </div>
             </div>
@@ -289,20 +293,25 @@
               <img
                 :src="`${channelInfoList.data.group_images[0].avatar}`"
                 alt="avatar"
-                style="height: 163px; width: 125px; flex:1"
+                style="height: 163px; width: 125px; flex: 1"
               />
               <img
                 :src="`${channelInfoList.data.group_images[1].avatar}`"
                 alt="avatar"
-                style="height: 163px; width: 125px; flex:1"
+                style="height: 163px; width: 125px; flex: 1"
               />
               <img
                 :src="`${channelInfoList.data.group_images[2].avatar}`"
                 alt="avatar"
-                style="height: 163px; width: 125px; flex:1"
+                style="height: 163px; width: 125px; flex: 1"
                 v-if="channelInfoList.data.count_member > 2"
               />
-              <div class="number_participants" v-if="channelInfoList.data.count_member > 2">+{{ channelInfoList.data.count_member - 3 }}</div>
+              <div
+                class="number_participants"
+                v-if="channelInfoList.data.count_member > 2"
+              >
+                +{{ channelInfoList.data.count_member - 3 }}
+              </div>
             </span>
           </div>
         </div>
@@ -555,6 +564,7 @@ import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import { onMounted, reactive, ref } from "vue";
 import { useChannelStore } from "../stores/channel.js";
+import { marked } from 'marked';
 
 export default {
   components: {
@@ -585,7 +595,7 @@ export default {
 
     let { messageList, loading, loadingMore, error, limit, currentChannel } =
       storeToRefs(useMessageStore());
-    const { fetchMessage, fetchMore, sendMessage } = useMessageStore();
+    const { sendMessage } = useMessageStore();
 
     const { channelList } = storeToRefs(useChannelStore());
 
@@ -593,8 +603,6 @@ export default {
       useChannelInfoStore()
     );
 
-    const { fetchChannelInfo } = useChannelInfoStore();
-    // console.log(channelInfoList.value.data.channel_type)
     let clickButton = ref(true);
     const isShow = ref(true);
     let messageInput = ref("");
@@ -603,57 +611,64 @@ export default {
     currentChannel.value = route.params.id;
 
     const ws = new WebSocket(
-      "wss://ws.ghtk.vn/ws/chat?Authorization=c_9pvt7zjguoe6bpz7anisrh5ymtrzkckne73srm6mjqk9clzcfocicirmz1edjq1t&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats"
+      "wss://ws.ghtk.vn/ws/chat?Authorization=c_z3ndox4lnsebfwn5dgofz9lfzjjhx2xrjxlfx7iyajostsqhqwj35yweypfltlfn&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats"
     );
 
     ws.onopen = function () {
       ws.send(
-        "c_w7t3uynrn9ekd2mor8oasahmlhqagauhgzubek8jwt1hi89fnrb2ho9f6zt0unrj|sub|chats_user_6801990813180061667"
+        "c_z3ndox4lnsebfwn5dgofz9lfzjjhx2xrjxlfx7iyajostsqhqwj35yweypfltlfn|sub|chats_user_6801990813180061667"
       );
     };
 
-    ws.onmessage = function (event) {
-      let message = JSON.parse(event.data);
-      console.log(message);
-      if (message.event === "message") {
-        // console.log(messageList);
-        messageList.value.unshift({
-          channel_id: message.data.channel_id,
-          channel_mode: message.data.channel_mode,
-          channel_type: message.data.channel_type,
-          created_at: message.data.created_at,
-          id: message.data.id,
-          is_pin: message.data.is_pin,
-          msg_type: message.data.msg_type,
-          ref_id: message.data.ref_id,
-          score: message.data.score,
-          sender: message.data.sender,
-          status: message.data.status,
-          text: message.data.text,
-          total_seen: message.data.total_seen,
-        });
+    onMounted(() => {
+      ws.onmessage = function (event) {
+        let message = JSON.parse(event.data);
+        console.log(message);
+        if (message.event === "message") {
+          const lastMsg = {
+            attachments: message.data.attachments,
+            channel_id: message.data.channel_id,
+            channel_mode: message.data.channel_mode,
+            channel_type: message.data.channel_type,
+            created_at: message.data.created_at,
+            id: message.data.id,
+            is_pin: message.data.is_pin,
+            msg_type: message.data.msg_type,
+            ref_id: message.data.ref_id,
+            score: message.data.score,
+            sender: message.data.sender,
+            status: message.data.status,
+            text: message.data.text,
+            total_seen: message.data.total_seen,
+          };
+          // console.log(messageList);
 
-        console.log(channelList);
-        fetchChannel();
-        // fetchMessage();
-      }
-    };
+          if(currentChannel === message.data.channel_id) {
+            messageList.value.unshift(lastMsg);
+          }
+
+          let scroll = document.querySelector("#layout-content");
+          scroll.scrollTop = 0;
+          // fetchNewMessage()
+          // fetchNewChannel();
+          channelList.value.forEach((channel) => {
+            if (channel.channel_id === message.data.channel_id) {
+              channel.last_message = lastMsg;
+            }
+          });
+        }
+      };
+    });
 
     let extraInfo = () => {
       clickButton.value = !clickButton.value;
       // console.log(clickButton);
     };
+
     function showInfo() {
       isShow.value = !isShow.value;
     }
-    function urlify(text) {
-      if (text) {
-        var urlRegex = /(https?:\/\/[^\s]+)/g;
-        return text.replace(urlRegex, function (url) {
-          return '<a href="' + url + '">' + url + "</a>";
-        });
-      }
-    }
+ 
     function normalizeDate(number) {
       return number < 10 ? "0" + number : number;
     }
@@ -676,7 +691,7 @@ export default {
       return time;
     }
     async function sendMessageHandle() {
-      if (messageInput.value && currentChannel.value)
+      if ((messageInput.value || selectFiles.value) && currentChannel.value)
         await sendMessage(messageInput.value, selectFiles.value);
       messageInput.value = "";
       selectFiles.value = [];
@@ -692,13 +707,9 @@ export default {
       ) {
         if (limit.value < 100) {
           limit.value += 10;
-          await fetchMore();
+          // await fetchMore();
         }
       }
-    }
-
-    function normalizeDate(number) {
-      return number < 10 ? "0" + number : number;
     }
 
     function getTime(date) {
@@ -750,7 +761,6 @@ export default {
       sendMessageHandle,
       showInfo,
       isShow,
-      urlify,
       getTime,
       getTimeQuote,
       scrollHandle,

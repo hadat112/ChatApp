@@ -9,9 +9,9 @@ export const useMessageStore = defineStore('messages', {
       loading: false,
       loadingMore: false,
       error: null,
-      limit: 20,
+      limit: 40,
       before: 0,
-      token: "c_w7t3uynrn9ekd2mor8oasahmlhqagauhgzubek8jwt1hi89fnrb2ho9f6zt0unrj"
+      token: "c_z3ndox4lnsebfwn5dgofz9lfzjjhx2xrjxlfx7iyajostsqhqwj35yweypfltlfn"
     }
   },
   actions: {
@@ -39,6 +39,26 @@ export const useMessageStore = defineStore('messages', {
       // console.log(this.messageList);
     },
 
+    async fetchNewMessage() {
+      const url1 = `https://chat.ghtk.vn/api/v3/messages?channel_id=${this.currentChannel}&before=${this.before}&limit=1`;
+      // const socket = io(url1)
+      // console.log(socket);
+      try {
+        let messages = await fetch(url1, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+          .then((res) => res.json())
+        // let removefirst = messages.data.splice(0, messages.data.length - 40);
+        this.messageList.unshift(...messages.data);
+        console.log(messagesList);
+      } catch (err) {
+        this.error = err;
+      }
+      // console.log(this.messageList);
+    },
+
     async fetchMore() {
       this.loadingMore = true;
       let messages
@@ -61,10 +81,6 @@ export const useMessageStore = defineStore('messages', {
         this.loadingMore = false;
       }
     },
-    // console.log(messages)
-
-    // console.log(this.messageList.length)
-  },
 
   async sendMessage(messageInput, selecteFiles) {
     let formData = new FormData();
@@ -82,8 +98,8 @@ export const useMessageStore = defineStore('messages', {
         'Content-Type': 'multipart/form-data'
       }
     })
-
-    this.fetchMessage();
+    // this.fetchNewMessage();
   }
+  },
 },
 )

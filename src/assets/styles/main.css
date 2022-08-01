@@ -367,6 +367,12 @@ i.ant-spin-dot-item {
     object-fit: cover;
 }
 
+.ant-image {
+    object-fit: cover;
+    height: 100%;
+    width: auto;
+}
+
 .message-attachments-item video{
     width: auto;
     height: 250px;

@@ -4,9 +4,9 @@ import 'ant-design-vue/dist/antd.css';
 import router from "./router";
 import "./assets/styles/main.css"
 import "./assets/styles/chat-info.css"
- 
-import { createPinia } from 'pinia';
+import { marked } from 'marked';
 
+import { createPinia } from 'pinia';
 import {
     Layout,
     List,
@@ -15,7 +15,17 @@ import {
     Image
 } from 'ant-design-vue'
 
+const markedMixin = {
+    methods: {
+        markedText: function (text) {
+            if (text)
+                return marked(text);
+        }
+    }
+}
+
 const app = createApp(App);
+app.mixin(markedMixin)
 app.use(Layout);
 app.use(List);
 app.use(Spin);

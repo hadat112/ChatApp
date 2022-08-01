@@ -4,12 +4,8 @@
       <input type="text" placeholder="Tìm kiếm" />
     </div>
     <div class="channel-tool">
-      <div class="channel-tool-create">
-        <plus-outlined />Chats
-      </div>
-      <div class="channel-tool-actions">
-        Thao tác 
-      </div>
+      <div class="channel-tool-create"><plus-outlined />Chats</div>
+      <div class="channel-tool-actions">Thao tác</div>
     </div>
     <div class="channel-list-wrapper" :class="{ loading: loading }">
       <div v-for="(item, index) in channelList" :key="index" class="">
@@ -28,10 +24,16 @@
               ></div>
               <div class="avatar-group" v-if="item.channel_type === 'group'">
                 <span class="channel-avatar avatar group">
-                  <img :src="`${item.group_images[0].avatar}`" alt="avatar-channel" />
+                  <img
+                    :src="`${item.group_images[0].avatar}`"
+                    alt="avatar-channel"
+                  />
                 </span>
                 <span class="channel-avatar avatar group">
-                  <img :src="`${item.group_images[1].avatar}`" alt="avatar-channel" />
+                  <img
+                    :src="`${item.group_images[1].avatar}`"
+                    alt="avatar-channel"
+                  />
                 </span>
               </div>
             </div>
@@ -51,8 +53,23 @@
                 </span>
                 <p
                   style="display: inline-block"
-                  v-html="urlify(item.last_message.text)"
+                  v-if="item.last_message.text"
+                  v-html="markedText(item.last_message.text)"
                 ></p>
+                <p
+                  v-else-if="
+                    item.last_message.attachments[0].ext === 'jpg' ||
+                    item.last_message.attachments[0].ext === 'png'
+                  "
+                >
+                  <camera-filled /> ảnh
+                </p>
+                <p
+                  v-else-if="
+                    item.last_message.attachments[0].ext === 'mp4'"
+                >
+                  <video-camera-filled /> video
+                </p>
               </div>
               <div class="channel-time">
                 {{ getTime(item.last_message.created_at) }}
@@ -69,11 +86,13 @@
 import { useChannelStore } from "../stores/channel.js";
 import { useChannelInfoStore } from "../stores/channel-info.js";
 import { storeToRefs } from "pinia";
-import {  PlusOutlined } from "@ant-design/icons-vue";
+import { PlusOutlined, CameraFilled, VideoCameraFilled } from "@ant-design/icons-vue";
 
 export default {
   components: {
-    PlusOutlined
+    PlusOutlined,
+    CameraFilled,
+    VideoCameraFilled
   },
   setup() {
     const { channelList, loading, error } = storeToRefs(useChannelStore());
@@ -81,19 +100,7 @@ export default {
       useChannelInfoStore()
     );
     const { fetchChannel } = useChannelStore();
-    const { fetchChannelInfo } = useChannelInfoStore();
     fetchChannel();
-
-    console.log(channelList.value);
-
-    function urlify(text) {
-      if (text) {
-        var urlRegex = /(https?:\/\/[^\s]+)/g;
-        return text.replace(urlRegex, function (url) {
-          return '<a href="' + url + '">' + url + "</a>";
-        });
-      }
-    }
     function normalizeDate(number) {
       return number < 10 ? "0" + number : number;
     }
@@ -110,13 +117,12 @@ export default {
       }
       return time;
     }
-    
+
     return {
       channelList,
       getTime,
       error,
       loading,
-      urlify,
       channelInfo,
       channelInfoLoading,
     };

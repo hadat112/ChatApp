@@ -422,6 +422,16 @@
   dependencies:
     "sourcemap-codec" "^1.4.8"
 
+"mark@^0.10.0":
+  "integrity" "sha512-4vESleb2r3t816/Mxxzb7TWStW9lOXcZTY7j7Wz8pRDlxVj+hquQZVgo1TuZVHr2KQ2IH+sdtwzuyqcoebZytA=="
+  "resolved" "https://registry.npmjs.org/mark/-/mark-0.10.0.tgz"
+  "version" "0.10.0"
+
+"marked@^4.0.18":
+  "integrity" "sha512-wbLDJ7Zh0sqA0Vdg6aqlbT+yPxqLblpAZh1mK2+AO2twQkPywvvqQNfEPVwSSRjZ7dZcdeVBIAgiO7MMp3Dszw=="
+  "resolved" "https://registry.npmjs.org/marked/-/marked-4.0.18.tgz"
+  "version" "4.0.18"
+
 "mime-db@1.52.0":
   "integrity" "sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg=="
   "resolved" "https://registry.npmjs.org/mime-db/-/mime-db-1.52.0.tgz"
