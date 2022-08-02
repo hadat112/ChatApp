@@ -4,6 +4,10 @@ import axios from 'axios';
 export const useMessageStore = defineStore('messages', {
   state: () => {
     return {
+      channelList: [],
+      unread: [],
+      loadingChannel: false,
+      errorChannel: null,
       messageList: [],
       currentChannel: null,
       loading: false,
@@ -11,7 +15,7 @@ export const useMessageStore = defineStore('messages', {
       error: null,
       limit: 40,
       before: 0,
-      token: "c_z3ndox4lnsebfwn5dgofz9lfzjjhx2xrjxlfx7iyajostsqhqwj35yweypfltlfn"
+      token: "c_xlivsz550natcyrsmdjh25q6vz5zkf1cc7m4bjbygnq25qqhwhdldv4dvtdqvwot"
     }
   },
   actions: {
@@ -63,7 +67,6 @@ export const useMessageStore = defineStore('messages', {
       this.loadingMore = true;
       let messages
       const url1 = `https://chat.ghtk.vn/api/v3/messages?channel_id=${this.currentChannel}&before=${this.before}&limit=${this.limit}`
-      const url = `https://chat.ghtk.vn/api/v3/messages?channel_id=${this.currentChannel}&limit=${this.limit}`
       try {
         messages = await fetch(url1, {
           headers: {
@@ -82,24 +85,52 @@ export const useMessageStore = defineStore('messages', {
       }
     },
 
-  async sendMessage(messageInput, selecteFiles) {
-    let formData = new FormData();
-    selecteFiles.forEach(file => {
-      formData.append('attachment', file);
-    });
-    formData.append('channel_id', this.currentChannel);
-    formData.append('msg_type', "text");
-    formData.append('ref_id', "1Pq2InaSrMP696rGQza5");
-    formData.append('text', messageInput);
+    async sendMessage(messageInput, selecteFiles) {
+      let formData = new FormData();
+      selecteFiles.forEach(file => {
+        formData.append('attachment', file);
+      });
+      formData.append('channel_id', this.currentChannel);
+      formData.append('msg_type', "text");
+      formData.append('ref_id', "1Pq2InaSrMP696rGQza5");
+      formData.append('text', messageInput);
 
-    await axios.post('https://chat.ghtk.vn/api/v3/messages', formData, {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    // this.fetchNewMessage();
-  }
+      await axios.post('https://chat.ghtk.vn/api/v3/messages', formData, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      // this.fetchNewMessage();
+    },
+    
+    async fetchChannel() {
+      this.loadingChannel = true;
+      const url = "https://chat.ghtk.vn/api/v3/channels?tag_id=930203%2C930205&group_id=1&limit=40"
+      let channel = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+        .then((res) => res.json())
+        .catch((err) => this.errorChannel = err)
+        .finally(() => this.loadingChannel = false);
+      this.channelList = channel.data
+    },
+
+    async fetchNewChannel() {
+      this.loadingChannel = true;
+      const url = "https://chat.ghtk.vn/api/v3/channels?tag_id=930203%2C930205&group_id=1&limit=1"
+      let channel = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+        .then((res) => res.json())
+        .catch((err) => this.errorChannel = err)
+        .finally(() => this.loadingChannel = false);
+      this.channelList.unshift(...channel.data)
+    },
   },
 },
 )

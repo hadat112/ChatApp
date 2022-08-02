@@ -12,7 +12,8 @@ import {
     List,
     PageHeader,
     Spin,
-    Image
+    Image,
+    Badge
 } from 'ant-design-vue'
 
 const markedMixin = {
@@ -29,8 +30,9 @@ app.mixin(markedMixin)
 app.use(Layout);
 app.use(List);
 app.use(Spin);
+app.use(Badge);
 app.use(PageHeader);
 app.use(Image);
-app.use(router);
 app.use(createPinia());
+app.use(router);
 app.mount('#app');

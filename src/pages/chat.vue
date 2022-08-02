@@ -562,9 +562,7 @@ import { useMessageStore } from "../stores/message-list.js";
 import { useChannelInfoStore } from "../stores/channel-info.js";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-import { onMounted, reactive, ref } from "vue";
-import { useChannelStore } from "../stores/channel.js";
-import { marked } from 'marked';
+import { onMounted, ref } from "vue";
 
 export default {
   components: {
@@ -593,11 +591,10 @@ export default {
   setup() {
     const route = useRoute();
 
-    let { messageList, loading, loadingMore, error, limit, currentChannel } =
+    let { messageList, loading, loadingMore, error, limit, currentChannel, channelList, unread } =
       storeToRefs(useMessageStore());
-    const { sendMessage } = useMessageStore();
 
-    const { channelList } = storeToRefs(useChannelStore());
+    const { sendMessage, token } = useMessageStore();
 
     const { channelInfoList, loadingChannelInfo } = storeToRefs(
       useChannelInfoStore()
@@ -610,20 +607,24 @@ export default {
     const filesUrl = ref([]);
     currentChannel.value = route.params.id;
 
+    channelList.value.forEach((index) => {
+      unread.value.push(0);
+    });
+
     const ws = new WebSocket(
-      "wss://ws.ghtk.vn/ws/chat?Authorization=c_z3ndox4lnsebfwn5dgofz9lfzjjhx2xrjxlfx7iyajostsqhqwj35yweypfltlfn&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats"
+      `wss://ws.ghtk.vn/ws/chat?Authorization=${token}&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats`
     );
 
     ws.onopen = function () {
       ws.send(
-        "c_z3ndox4lnsebfwn5dgofz9lfzjjhx2xrjxlfx7iyajostsqhqwj35yweypfltlfn|sub|chats_user_6801990813180061667"
+        `${token}|sub|chats_user_6801990813180061667`
       );
     };
 
     onMounted(() => {
       ws.onmessage = function (event) {
         let message = JSON.parse(event.data);
-        console.log(message);
+        // console.log(message);
         if (message.event === "message") {
           const lastMsg = {
             attachments: message.data.attachments,
@@ -641,9 +642,8 @@ export default {
             text: message.data.text,
             total_seen: message.data.total_seen,
           };
-          // console.log(messageList);
 
-          if(currentChannel === message.data.channel_id) {
+          if (currentChannel.value === message.data.channel_id) {
             messageList.value.unshift(lastMsg);
           }
 
@@ -651,9 +651,19 @@ export default {
           scroll.scrollTop = 0;
           // fetchNewMessage()
           // fetchNewChannel();
-          channelList.value.forEach((channel) => {
+          channelList.value.forEach((channel, index) => {
             if (channel.channel_id === message.data.channel_id) {
+              channelList.value.unshift(channelList.value.splice(index, 1)[0]);
+              if (currentChannel.value != message.data.channel_id) {
+                unread.value[index]++;
+              }
               channel.last_message = lastMsg;
+            }
+          });
+        } else if (message.event === "update_count_message_unread") {
+          channelList.value.forEach((channel, index) => {
+            if (channel.channel_id === message.data.channel_id) {
+              unread.value[index] = 0;
             }
           });
         }
@@ -662,13 +672,12 @@ export default {
 
     let extraInfo = () => {
       clickButton.value = !clickButton.value;
-      // console.log(clickButton);
     };
 
     function showInfo() {
       isShow.value = !isShow.value;
     }
- 
+
     function normalizeDate(number) {
       return number < 10 ? "0" + number : number;
     }
