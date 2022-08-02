@@ -54,6 +54,7 @@ body {
     background-color: #fff;
     display: flex;
     flex-direction: column;
+    flex:1;
 }
 
 .header-channel-list {
@@ -242,6 +243,7 @@ body {
 .chat-view {
     height: 100%;
     display: flex;
+    flex: 4;
     flex-direction: column;
     background-color: #fff;
     width: 100%;
