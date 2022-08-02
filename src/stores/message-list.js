@@ -11,7 +11,7 @@ export const useMessageStore = defineStore('messages', {
       error: null,
       limit: 20,
       before: 0,
-      token: "c_w7t3uynrn9ekd2mor8oasahmlhqagauhgzubek8jwt1hi89fnrb2ho9f6zt0unrj"
+      token: "c_k83wnfiiyv2dlm9kobpyoog5v1buk56rkyt7lre7onsvcvvtrjad8bwzqbn778fx"
     }
   },
   actions: {
@@ -61,29 +61,29 @@ export const useMessageStore = defineStore('messages', {
         this.loadingMore = false;
       }
     },
+
+    async sendMessage(messageInput, selecteFiles) {
+      let formData = new FormData();
+      selecteFiles.forEach(file => {
+        formData.append('attachment', file);
+      });
+      formData.append('channel_id', this.currentChannel);
+      formData.append('msg_type', "text");
+      formData.append('ref_id', "1Pq2InaSrMP696rGQza5");
+      formData.append('text', messageInput);
+  
+      await axios.post('https://chat.ghtk.vn/api/v3/messages', formData, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+  
+      this.fetchMessage();
+    }
     // console.log(messages)
 
     // console.log(this.messageList.length)
   },
-
-  async sendMessage(messageInput, selecteFiles) {
-    let formData = new FormData();
-    selecteFiles.forEach(file => {
-      formData.append('attachment', file);
-    });
-    formData.append('channel_id', this.currentChannel);
-    formData.append('msg_type', "text");
-    formData.append('ref_id', "1Pq2InaSrMP696rGQza5");
-    formData.append('text', messageInput);
-
-    await axios.post('https://chat.ghtk.vn/api/v3/messages', formData, {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-
-    this.fetchMessage();
-  }
 },
 )

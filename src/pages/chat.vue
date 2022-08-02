@@ -74,7 +74,7 @@
           <div
             class="message-container"
             :class="{
-              self: item.sender.id == '6801990813180061667',
+              self: item.sender.id == '3833119638128087298',
               mt16:
                 index &&
                 item.sender.id !=
@@ -85,7 +85,7 @@
             <div
               class="message-avt-container"
               v-if="
-                item.sender.id != '6801990813180061667' &&
+                item.sender.id != '3833119638128087298' &&
                 (index == 0 ||
                   item.sender.id !=
                     messageList[messageList.length - index].sender.id ||
@@ -119,7 +119,7 @@
               <!-- msg name -->
               <div
                 v-if="
-                  item.sender.id != '6801990813180061667' &&
+                  item.sender.id != '3833119638128087298' &&
                   (index == 0 ||
                     item.sender.id !=
                       messageList[messageList.length - index].sender.id ||
@@ -162,7 +162,7 @@
                 v-if="item.text && item.msg_type == 'text'"
                 class="message-text"
                 :class="{
-                  self: item.sender.id == '6801990813180061667',
+                  self: item.sender.id == '3833119638128087298',
                   message_delete: item.text === 'Tin nhắn đã được thu hồi',
                 }"
                 v-html="urlify(item.text)"
@@ -171,7 +171,7 @@
               <div
                 v-if="item.msg_type == 'forward_message'"
                 class="message-forward"
-                :class="{ self: item.sender.id == '6801990813180061667' }"
+                :class="{ self: item.sender.id == '3833119638128087298' }"
               >
                 <!-- msg-forward-icon -->
                 <div class="message-forward-icon">
@@ -199,6 +199,17 @@
         </div>
       </div>
     </a-layout-content>
+    <!-- Typing message -->
+    <div class="typing" v-if="typingTest">
+      <div class="typing-avt-container">
+        <div
+          class="message-avt"
+          v-if="channelInfoList.data"
+          :style="`background-image: url(${channelInfoList.data.avatar})`"
+        ></div>
+      </div>
+      <div class="typing-text">Typing</div>
+    </div>
     <!-- footer -->
     <a-layout-footer>
       <!-- msg-preview-img -->
@@ -289,20 +300,25 @@
               <img
                 :src="`${channelInfoList.data.group_images[0].avatar}`"
                 alt="avatar"
-                style="height: 163px; width: 125px; flex:1"
+                style="height: 163px; width: 125px; flex: 1"
               />
               <img
                 :src="`${channelInfoList.data.group_images[1].avatar}`"
                 alt="avatar"
-                style="height: 163px; width: 125px; flex:1"
+                style="height: 163px; width: 125px; flex: 1"
               />
               <img
                 :src="`${channelInfoList.data.group_images[2].avatar}`"
                 alt="avatar"
-                style="height: 163px; width: 125px; flex:1"
+                style="height: 163px; width: 125px; flex: 1"
                 v-if="channelInfoList.data.count_member > 2"
               />
-              <div class="number_participants" v-if="channelInfoList.data.count_member > 2">+{{ channelInfoList.data.count_member - 3 }}</div>
+              <div
+                class="number_participants"
+                v-if="channelInfoList.data.count_member > 2"
+              >
+                +{{ channelInfoList.data.count_member - 3 }}
+              </div>
             </span>
           </div>
         </div>
@@ -600,15 +616,16 @@ export default {
     let messageInput = ref("");
     let selectFiles = ref([]);
     const filesUrl = ref([]);
+    let typingTest = ref(false);
     currentChannel.value = route.params.id;
 
     const ws = new WebSocket(
-      "wss://ws.ghtk.vn/ws/chat?Authorization=c_9pvt7zjguoe6bpz7anisrh5ymtrzkckne73srm6mjqk9clzcfocicirmz1edjq1t&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats"
+      "wss://ws.ghtk.vn/ws/chat?Authorization=c_k83wnfiiyv2dlm9kobpyoog5v1buk56rkyt7lre7onsvcvvtrjad8bwzqbn778fx&appType=gchat&appVersion=2022-07-30%2C10%3A16%3A34&device=web&deviceId=RkZShIxpOLoMo3LMdjth&source=chats"
     );
 
     ws.onopen = function () {
       ws.send(
-        "c_w7t3uynrn9ekd2mor8oasahmlhqagauhgzubek8jwt1hi89fnrb2ho9f6zt0unrj|sub|chats_user_6801990813180061667"
+        "c_k83wnfiiyv2dlm9kobpyoog5v1buk56rkyt7lre7onsvcvvtrjad8bwzqbn778fx|sub|chats_user_3833119638128087298"
       );
     };
 
@@ -616,6 +633,7 @@ export default {
       let message = JSON.parse(event.data);
       console.log(message);
       if (message.event === "message") {
+        typingTest.value = false;
         // console.log(messageList);
         messageList.value.unshift({
           channel_id: message.data.channel_id,
@@ -632,11 +650,14 @@ export default {
           text: message.data.text,
           total_seen: message.data.total_seen,
         });
-
-        console.log(channelList);
-        fetchChannel();
-        // fetchMessage();
+        // console.log(channelList);
+        // fetchChannel();
+        fetchMessage();
       }
+      if (message.event === "typing") {
+        typingTest.value = true;
+      }
+      console.log(typingTest.value);
     };
 
     let extraInfo = () => {
@@ -761,7 +782,9 @@ export default {
       extraInfo,
       clickButton,
       deletePreview,
+      typingTest,
     };
   },
 };
 </script>;
+
