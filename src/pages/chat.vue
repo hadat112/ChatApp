@@ -78,7 +78,7 @@
           <div
             class="message-container"
             :class="{
-              self: item.sender.id == '6801990813180061667',
+              self: item.sender.id == '3833119638128087298',
               mt16:
                 index &&
                 item.sender.id !=
@@ -89,7 +89,7 @@
             <div
               class="message-avt-container"
               v-if="
-                item.sender.id != '6801990813180061667' &&
+                item.sender.id != '3833119638128087298' &&
                 (index == 0 ||
                   item.sender.id !=
                     messageList[messageList.length - index].sender.id ||
@@ -123,7 +123,7 @@
               <!-- msg name -->
               <div
                 v-if="
-                  item.sender.id != '6801990813180061667' &&
+                  item.sender.id != '3833119638128087298' &&
                   (index == 0 ||
                     item.sender.id !=
                       messageList[messageList.length - index].sender.id ||
@@ -166,7 +166,7 @@
                 v-if="item.text && item.msg_type == 'text'"
                 class="message-text"
                 :class="{
-                  self: item.sender.id == '6801990813180061667',
+                  self: item.sender.id == '3833119638128087298',
                   message_delete: item.text === 'Tin nhắn đã được thu hồi',
                 }"
                 v-html="markedText(item.text)"
@@ -175,7 +175,7 @@
               <div
                 v-if="item.msg_type == 'forward_message'"
                 class="message-forward"
-                :class="{ self: item.sender.id == '6801990813180061667' }"
+                :class="{ self: item.sender.id == '3833119638128087298' }"
               >
                 <!-- msg-forward-icon -->
                 <div class="message-forward-icon">
@@ -203,6 +203,17 @@
         </div>
       </div>
     </a-layout-content>
+    <!-- Typing message -->
+    <div class="typing" v-if="typingTest">
+      <div class="typing-avt-container">
+        <div
+          class="message-avt"
+          v-if="channelInfoList.data"
+          :style="`background-image: url(${channelInfoList.data.avatar})`"
+        ></div>
+      </div>
+      <div class="typing-text">Typing</div>
+    </div>
     <!-- footer -->
     <a-layout-footer>
       <!-- msg-preview-img -->
@@ -605,6 +616,7 @@ export default {
     let messageInput = ref("");
     let selectFiles = ref([]);
     const filesUrl = ref([]);
+    let typingTest = ref(false);
     currentChannel.value = route.params.id;
 
     channelList.value.forEach((index) => {
@@ -666,9 +678,13 @@ export default {
               unread.value[index] = 0;
             }
           });
-        }
+        } else if (message.event === "typing") {
+        typingTest.value = true;
+      }
+      console.log(typingTest.value);
       };
     });
+        
 
     let extraInfo = () => {
       clickButton.value = !clickButton.value;
@@ -780,6 +796,7 @@ export default {
       extraInfo,
       clickButton,
       deletePreview,
+      typingTest,
     };
   },
 };
