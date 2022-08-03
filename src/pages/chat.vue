@@ -253,6 +253,7 @@
                 type="file"
                 hidden="hidden"
                 ref="inputUpload"
+                multiple
                 @change="onFileSelected"
               />
               <button
@@ -638,6 +639,7 @@ export default {
         let message = JSON.parse(event.data);
         // console.log(message);
         if (message.event === "message") {
+          typingTest.value = false;
           const lastMsg = {
             attachments: message.data.attachments,
             channel_id: message.data.channel_id,
