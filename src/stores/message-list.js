@@ -15,7 +15,7 @@ export const useMessageStore = defineStore('messages', {
       error: null,
       limit: 40,
       before: 0,
-      token: "c_xlivsz550natcyrsmdjh25q6vz5zkf1cc7m4bjbygnq25qqhwhdldv4dvtdqvwot"
+      token: "c_zixa9mmy4flin2kzoxjamkjltb6fwdpfeuofwwqzpl1xy56eb9qbror1dsgdv2fu"
     }
   },
   actions: {

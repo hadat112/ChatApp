@@ -94,7 +94,6 @@ import { storeToRefs } from "pinia";
 import { PlusOutlined, CameraFilled, VideoCameraFilled } from "@ant-design/icons-vue";
 import { useMessageStore } from '../stores/message-list.js';
 import { useRouter } from 'vue-router';
-import { onMounted } from '@vue/runtime-core';
 
 export default {
   components: {
