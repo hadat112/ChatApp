@@ -15,6 +15,10 @@
     margin-left: 47px;
 }
 
+.w60 {
+    width: 60% !important;
+}
+
 .mt16 {
     margin-top: 16px !important;
 }
@@ -54,7 +58,7 @@ body {
     background-color: #fff;
     display: flex;
     flex-direction: column;
-    flex:1;
+    flex: 1;
 }
 
 .header-channel-list {
@@ -315,7 +319,7 @@ i.ant-spin-dot-item {
     background-color: #fff;
     display: flex;
     flex-direction: column-reverse;
-    margin-bottom: -10px;
+    margin-bottom: 6px;
 }
 
 .scroll-start-at-top {
@@ -393,8 +397,9 @@ i.ant-spin-dot-item {
 }
 
 .ant-image {
-    object-fit: cover;
     height: 100%;
+    margin: 0 2px 2px 0;
+    object-fit: cover;
     width: auto;
 }
 
@@ -587,7 +592,8 @@ i.ant-spin-dot-item {
     border: none;
     border-radius: 40px;
     font-size: x-large;
-    color: rgb(204, 204, 204)
+    color: rgb(204, 204, 204);
+    cursor: pointer;
 }
 
 .send-btn:focus {
@@ -609,9 +615,9 @@ i.ant-spin-dot-item {
     position: relative;
     opacity: 0.5;
     filter: alpha(opacity=100);
-  }
-  
-  .typing-text {
+}
+
+.typing-text {
     margin-left: 15px;
     margin-top: 8px;
-  }
+}

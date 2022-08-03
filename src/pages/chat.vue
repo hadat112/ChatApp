@@ -1,7 +1,7 @@
 <template>
   <a-spin class="chat-spinner" v-if="loading || loadingChannelInfo" />
   <!-- chatview -->
-  <div class="chat-view" :class="{ loading: loading || loadingChannelInfo }">
+  <div class="chat-view" :class="{ loading: loading || loadingChannelInfo, w60: !isShow }">
     <!-- header -->
     <a-layout-header
       v-if="!loadingChannelInfo"
@@ -15,7 +15,7 @@
         <template #extra>
           <button
             @click="showInfo"
-            style="background: #fff; border: none; outline: none"
+            style="background: #fff; border: none; outline: none; cursor: pointer;"
           >
             <ellipsis-outlined style="font-size: 28px; color: #a4a4a4" />
           </button>
@@ -29,7 +29,7 @@
         <template #extra>
           <button
             @click="showInfo"
-            style="background: #fff; border: none; outline: none"
+            style="background: #fff; border: none; outline: none; cursor: pointer;"
           >
             <ellipsis-outlined style="font-size: 28px; color: #a4a4a4" />
           </button>
@@ -78,7 +78,7 @@
           <div
             class="message-container"
             :class="{
-              self: item.sender.id == '3833119638128087298',
+              self: item.sender.id == '6801990813180061667',
               mt16:
                 index &&
                 item.sender.id !=
@@ -89,7 +89,7 @@
             <div
               class="message-avt-container"
               v-if="
-                item.sender.id != '3833119638128087298' &&
+                item.sender.id != '6801990813180061667' &&
                 (index == 0 ||
                   item.sender.id !=
                     messageList[messageList.length - index].sender.id ||
@@ -123,7 +123,7 @@
               <!-- msg name -->
               <div
                 v-if="
-                  item.sender.id != '3833119638128087298' &&
+                  item.sender.id != '6801990813180061667' &&
                   (index == 0 ||
                     item.sender.id !=
                       messageList[messageList.length - index].sender.id ||
@@ -166,8 +166,8 @@
                 v-if="item.text && item.msg_type == 'text'"
                 class="message-text"
                 :class="{
-                  self: item.sender.id == '3833119638128087298',
-                  message_delete: item.text === 'Tin nhắn đã được thu hồi',
+                  self: item.sender.id == '6801990813180061667',
+                  message_delete: item.desc === '',
                 }"
                 v-html="markedText(item.text)"
               ></div>
@@ -175,7 +175,7 @@
               <div
                 v-if="item.msg_type == 'forward_message'"
                 class="message-forward"
-                :class="{ self: item.sender.id == '3833119638128087298' }"
+                :class="{ self: item.sender.id == '6801990813180061667' }"
               >
                 <!-- msg-forward-icon -->
                 <div class="message-forward-icon">
@@ -209,7 +209,7 @@
         <div
           class="message-avt"
           v-if="channelInfoList.data"
-          :style="`background-image: url(${channelInfoList.data.avatar})`"
+          :style="`background-image: url(${typingAvt})`"
         ></div>
       </div>
       <div class="typing-text">Typing</div>
@@ -618,11 +618,16 @@ export default {
     let selectFiles = ref([]);
     const filesUrl = ref([]);
     let typingTest = ref(false);
+    let typingAvt = ref('');
+
     currentChannel.value = route.params.id;
 
     channelList.value.forEach((index) => {
       unread.value.push(0);
     });
+
+    typingAvt.value = '';
+    typingTest.value = false;
 
     const ws = new WebSocket(
       `wss://ws.ghtk.vn/ws/chat?Authorization=${token}&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats`
@@ -637,7 +642,7 @@ export default {
     onMounted(() => {
       ws.onmessage = function (event) {
         let message = JSON.parse(event.data);
-        // console.log(message);
+        console.log(message);
         if (message.event === "message") {
           typingTest.value = false;
           const lastMsg = {
@@ -681,7 +686,12 @@ export default {
             }
           });
         } else if (message.event === "typing") {
-        typingTest.value = true;
+          if(currentChannel.value === message.data.channel_id) {
+            setTimeout(function() {
+              typingAvt.value = message.data.sender.avatar;
+              typingTest.value = true;
+            }, 3000)
+          }
       }
       console.log(typingTest.value);
       };
@@ -771,8 +781,12 @@ export default {
     }
 
     function onFileSelected(e) {
-      selectFiles.value.push(e.target.files[0]);
-      filesUrl.value.push(URL.createObjectURL(e.target.files[0]));
+      console.log( e.target.files);
+      Object.values(e.target.files).forEach((file)=> {
+        console.log( file);
+        selectFiles.value.push(file);
+        filesUrl.value.push(URL.createObjectURL(file));
+      })
     }
 
     function deletePreview(index) {
@@ -799,6 +813,7 @@ export default {
       clickButton,
       deletePreview,
       typingTest,
+      typingAvt,
     };
   },
 };

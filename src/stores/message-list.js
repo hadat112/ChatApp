@@ -116,6 +116,7 @@ export const useMessageStore = defineStore('messages', {
         .catch((err) => this.errorChannel = err)
         .finally(() => this.loadingChannel = false);
       this.channelList = channel.data
+      // console.log(this.channelList);
     },
 
     async fetchNewChannel() {
