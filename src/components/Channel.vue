@@ -4,12 +4,8 @@
       <input type="text" placeholder="Tìm kiếm" />
     </div>
     <div class="channel-tool">
-      <div class="channel-tool-create">
-        <plus-outlined />Chats
-      </div>
-      <div class="channel-tool-actions">
-        Thao tác 
-      </div>
+      <div class="channel-tool-create"><plus-outlined />Chats</div>
+      <div class="channel-tool-actions">Thao tác</div>
     </div>
     <div class="channel-list-wrapper" :class="{ loading: loading }">
       <div v-for="(item, index) in channelList" :key="index" class="">
@@ -28,10 +24,16 @@
               ></div>
               <div class="avatar-group" v-if="item.channel_type === 'group'">
                 <span class="channel-avatar avatar group">
-                  <img :src="`${item.group_images[0].avatar}`" alt="avatar-channel" />
+                  <img
+                    :src="`${item.group_images[0].avatar}`"
+                    alt="avatar-channel"
+                  />
                 </span>
                 <span class="channel-avatar avatar group">
-                  <img :src="`${item.group_images[1].avatar}`" alt="avatar-channel" />
+                  <img
+                    :src="`${item.group_images[1].avatar}`"
+                    alt="avatar-channel"
+                  />
                 </span>
               </div>
             </div>
@@ -41,7 +43,15 @@
               {{ item.channel_name }}
             </div>
             <div class="channel-last-msg">
-              <div class="channel-text">
+              <div class="typing" v-if="typingTest && item.channel_id == channelID">
+                <img
+                  class="item-channel__typing"
+                  src="https://ghtk.me/images/dots.gif"
+                  alt="Dot"
+                />
+                đang soạn tin
+              </div>
+              <div class="channel-text" v-else>
                 <span v-if="item.channel_type === 'group'">
                   {{
                     item.last_message.sender.fullname.split(" ")[
@@ -54,6 +64,7 @@
                   v-html="urlify(item.last_message.text)"
                 ></p>
               </div>
+              
               <div class="channel-time">
                 {{ getTime(item.last_message.created_at) }}
               </div>
@@ -69,22 +80,24 @@
 import { useChannelStore } from "../stores/channel.js";
 import { useChannelInfoStore } from "../stores/channel-info.js";
 import { storeToRefs } from "pinia";
-import {  PlusOutlined } from "@ant-design/icons-vue";
+import { PlusOutlined } from "@ant-design/icons-vue";
+import { ref } from "@vue/reactivity";
+// import {channelID, typingTest} from "../websocket/ws.js"
 
 export default {
   components: {
-    PlusOutlined
+    PlusOutlined,
   },
   setup() {
-    const { channelList, loading, error } = storeToRefs(useChannelStore());
+    const { channelList, loading, error, typingTest, channelID } = storeToRefs(useChannelStore());
+    // console.log(typingTest.value);
+    console.log(channelID)
     const { channelInfo, channelInfoLoading } = storeToRefs(
       useChannelInfoStore()
     );
     const { fetchChannel } = useChannelStore();
     const { fetchChannelInfo } = useChannelInfoStore();
     fetchChannel();
-
-    console.log(channelList.value);
 
     function urlify(text) {
       if (text) {
@@ -110,7 +123,7 @@ export default {
       }
       return time;
     }
-    
+
     return {
       channelList,
       getTime,
@@ -119,7 +132,18 @@ export default {
       urlify,
       channelInfo,
       channelInfoLoading,
+      typingTest,
+      channelID
     };
   },
 };
 </script>
+<style>
+img {
+  vertical-align: middle;
+  border-style: none;
+}
+.item-channel__typing{
+  width: 38px;
+}
+</style>

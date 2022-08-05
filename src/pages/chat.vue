@@ -200,7 +200,10 @@
       </div>
     </a-layout-content>
     <!-- Typing message -->
-    <div class="typing" v-if="typingTest">
+    <div
+      class="typing"
+      v-if="typingTest && channel_id === channelInfoList.data.channel_id"
+    >
       <div class="typing-avt-container">
         <div
           class="message-avt"
@@ -208,7 +211,13 @@
           :style="`background-image: url(${channelInfoList.data.avatar})`"
         ></div>
       </div>
-      <div class="typing-text">Typing</div>
+      <div class="typing-text">
+        <img
+          class="item-channel__typing"
+          src="https://ghtk.me/images/dots.gif"
+          alt="Dot"
+        />
+      </div>
     </div>
     <!-- footer -->
     <a-layout-footer>
@@ -603,29 +612,27 @@ export default {
       storeToRefs(useMessageStore());
     const { fetchMessage, fetchMore, sendMessage } = useMessageStore();
 
-    const { channelList } = storeToRefs(useChannelStore());
-
     const { channelInfoList, loadingChannelInfo } = storeToRefs(
       useChannelInfoStore()
     );
-
-    const { fetchChannelInfo } = useChannelInfoStore();
-    // console.log(channelInfoList.value.data.channel_type)
+    let { channelList, loadinchannel, errorChannel, typingTest, channelID } =
+      storeToRefs(useChannelStore());
+    const { fetchChannel } = useChannelStore();
     let clickButton = ref(true);
     const isShow = ref(true);
     let messageInput = ref("");
     let selectFiles = ref([]);
     const filesUrl = ref([]);
-    let typingTest = ref(false);
     currentChannel.value = route.params.id;
+    let channel_id = ref("");
 
     const ws = new WebSocket(
-      "wss://ws.ghtk.vn/ws/chat?Authorization=c_k83wnfiiyv2dlm9kobpyoog5v1buk56rkyt7lre7onsvcvvtrjad8bwzqbn778fx&appType=gchat&appVersion=2022-07-30%2C10%3A16%3A34&device=web&deviceId=RkZShIxpOLoMo3LMdjth&source=chats"
+      "wss://ws.ghtk.vn/ws/chat?Authorization=c_ftm6dpscpo1ysdynmnl5slqoubvaytspjxijumfvrdf6fvxidrevnvssvj9t197j&appType=gchat&appVersion=2022-08-03%2C13%3A40%3A10&device=web&deviceId=39k6fijWg1byJviJpNd3&source=chats"
     );
 
     ws.onopen = function () {
       ws.send(
-        "c_k83wnfiiyv2dlm9kobpyoog5v1buk56rkyt7lre7onsvcvvtrjad8bwzqbn778fx|sub|chats_user_3833119638128087298"
+        "c_ftm6dpscpo1ysdynmnl5slqoubvaytspjxijumfvrdf6fvxidrevnvssvj9t197j|sub|chats_user_3833119638128087298"
       );
     };
 
@@ -634,7 +641,6 @@ export default {
       console.log(message);
       if (message.event === "message") {
         typingTest.value = false;
-        // console.log(messageList);
         messageList.value.unshift({
           channel_id: message.data.channel_id,
           channel_mode: message.data.channel_mode,
@@ -650,19 +656,18 @@ export default {
           text: message.data.text,
           total_seen: message.data.total_seen,
         });
-        // console.log(channelList);
-        // fetchChannel();
+        fetchChannel();
         fetchMessage();
       }
       if (message.event === "typing") {
         typingTest.value = true;
+        channel_id.value = message.data.channel_id;
+        channelID.value = channel_id.value;
       }
-      console.log(typingTest.value);
     };
 
     let extraInfo = () => {
       clickButton.value = !clickButton.value;
-      // console.log(clickButton);
     };
     function showInfo() {
       isShow.value = !isShow.value;
@@ -783,6 +788,8 @@ export default {
       clickButton,
       deletePreview,
       typingTest,
+      channelID,
+      channel_id,
     };
   },
 };

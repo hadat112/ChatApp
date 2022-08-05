@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useChannelInfoStore } from "../stores/channel-info";
 import { useMessageStore } from "../stores/message-list";
-
 const routes = [
   {
     path: "/:id?",
@@ -23,7 +22,6 @@ router.beforeEach((to, from, next) => {
     msgStore.currentChannel = to.params.id
     msgStore.before = from.params.id
     msgStore.limit = 20;
-
     msgStore.fetchMessage();
     channelInfoStore.fetchChannelInfo(to.params.id);
 
