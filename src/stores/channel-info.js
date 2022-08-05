@@ -4,13 +4,14 @@ export const useChannelInfoStore = defineStore('channelInfo', {
     state: () => {
         return {
           channelInfoList: [],
-          loadingChannelInfo: false
+          loadingChannelInfo: false,
+          isShow: true
         }
       },
       actions: {
         async fetchChannelInfo(channelId) {
           this.loadingChannelInfo = true;
-            const token = "c_zixa9mmy4flin2kzoxjamkjltb6fwdpfeuofwwqzpl1xy56eb9qbror1dsgdv2fu";
+            const token = "c_be9jspkyblcd4p1fa7aqzmikgjm1v5eh817qpezp0xacp9aezrvvqonnpucqs4fh";
             const url = `https://chat.ghtk.vn/api/v3/channels/info?channel_id=${channelId}`
             try {
               this.channelInfoList = await fetch(url, {

@@ -23,7 +23,6 @@ router.beforeEach((to, from, next) => {
     msgStore.currentChannel = to.params.id
     msgStore.before = from.params.id
     msgStore.limit = 40;
-
     msgStore.fetchMessage();
     channelInfoStore.fetchChannelInfo(to.params.id);
 
