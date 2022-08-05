@@ -377,7 +377,7 @@ export default {
             typingTest.value = false;
             channel_id.value = '';
             typingChannel.value = channel_id.value;
-          }, 3000);
+          }, 5000);
         }
         // console.log(typingTest.value);
       };
