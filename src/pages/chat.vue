@@ -154,7 +154,10 @@
       </div>
     </a-layout-content>
     <!-- Typing message -->
-    <div class="typing" v-if="typingTest">
+    <div
+      class="typing"
+      v-if="typingTest && channel_id === channelInfoList.data.channel_id"
+    >
       <div class="typing-avt-container">
         <div
           class="message-avt"
@@ -162,7 +165,13 @@
           :style="`background-image: url(${typingAvt})`"
         ></div>
       </div>
-      <div class="typing-text">Typing</div>
+      <div class="typing-text">
+        <img
+          class="item-channel__typing"
+          src="https://ghtk.me/images/dots.gif"
+          alt="Dot"
+        />
+      </div>
     </div>
     <!-- footer -->
     <a-layout-footer>
@@ -420,6 +429,8 @@ export default {
       deletePreview,
       typingTest,
       typingAvt,
+      channelID,
+      channel_id,
     };
   },
 };

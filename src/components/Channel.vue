@@ -49,7 +49,15 @@
               </div>
             </div>
             <div class="channel-last-msg">
-              <div class="channel-text">
+              <div class="typing" v-if="typingTest && item.channel_id == channelID">
+                <img
+                  class="item-channel__typing"
+                  src="https://ghtk.me/images/dots.gif"
+                  alt="Dot"
+                />
+                đang soạn tin
+              </div>
+              <div class="channel-text" v-else>
                 <span v-if="item.channel_type === 'group'">
                   {{
                     item.last_message.sender.fullname.split(" ")[
@@ -77,6 +85,7 @@
                   <video-camera-filled /> video
                 </p>
               </div>
+              
               <div class="channel-time">
                 {{ getTime(item.last_message.created_at) }}
               </div>
@@ -134,8 +143,19 @@ export default {
       loadingChannel,
       channelInfo,
       channelInfoLoading,
-      unread
+      unread,
+      typingTest,
+      channelID
     };
   },
 };
 </script>
+<style>
+img {
+  vertical-align: middle;
+  border-style: none;
+}
+.item-channel__typing{
+  width: 38px;
+}
+</style>

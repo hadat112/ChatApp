@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useChannelInfoStore } from "../stores/channel-info";
 import { useMessageStore } from "../stores/message-list";
-
 const routes = [
   {
     path: "/:id?",

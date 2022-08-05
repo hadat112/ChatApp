@@ -6,6 +6,7 @@ export const useMessageStore = defineStore('messages', {
     return {
       channelList: [],
       unread: [],
+      typingTest: false,
       loadingChannel: false,
       errorChannel: null,
       messageList: [],
