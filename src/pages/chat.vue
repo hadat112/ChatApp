@@ -285,8 +285,10 @@ export default {
       error,
       limit,
       currentChannel,
+      typingChannel,
       channelList,
       unread,
+      typingTest,
     } = storeToRefs(useMessageStore());
 
     const { fetchMore, sendMessage, token } = useMessageStore();
@@ -297,9 +299,9 @@ export default {
     let messageInput = ref("");
     let selectFiles = ref([]);
     const filesUrl = ref([]);
-    let typingTest = ref(false);
+    // let typingTest = ref(false);
     let typingAvt = ref("");
-
+    let channel_id = ref("")
     // currentChannel.value = route.params.id;
 
     channelList.value.forEach((index) => {
@@ -307,7 +309,6 @@ export default {
     });
 
     typingAvt.value = "";
-    typingTest.value = false;
 
     const ws = new WebSocket(
       `wss://ws.ghtk.vn/ws/chat?Authorization=${token}&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats`
@@ -365,10 +366,18 @@ export default {
             }
           });
         } else if (message.event === "typing") {
+          channel_id.value = message.data.channel_id;
+          typingChannel.value = channel_id.value;
           if (currentChannel.value === message.data.channel_id) {
             typingAvt.value = message.data.sender.avatar;
             typingTest.value = true;
           }
+          setTimeout(() => {
+            typingAvt.value = '';
+            typingTest.value = false;
+            channel_id.value = '';
+            typingChannel.value = channel_id.value;
+          }, 3000);
         }
         // console.log(typingTest.value);
       };
@@ -429,8 +438,8 @@ export default {
       deletePreview,
       typingTest,
       typingAvt,
-      channelID,
       channel_id,
+      currentChannel
     };
   },
 };

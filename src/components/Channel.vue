@@ -49,7 +49,7 @@
               </div>
             </div>
             <div class="channel-last-msg">
-              <div class="typing" v-if="typingTest && item.channel_id == channelID">
+              <div class="typing-channel" v-if="item.channel_id == typingChannel">
                 <img
                   class="item-channel__typing"
                   src="https://ghtk.me/images/dots.gif"
@@ -112,7 +112,7 @@ export default {
   },
   setup() {
     const router = useRouter()
-    const { channelList, unread, loadingChannel, errorChannel } = storeToRefs(useMessageStore());
+    const { channelList, unread, loadingChannel, errorChannel, typingTest, typingChannel } = storeToRefs(useMessageStore());
     const { channelInfo, channelInfoLoading } = storeToRefs(
       useChannelInfoStore()
     );
@@ -145,7 +145,7 @@ export default {
       channelInfoLoading,
       unread,
       typingTest,
-      channelID
+      typingChannel,
     };
   },
 };
