@@ -318,7 +318,14 @@ export default {
       clickButton.value = !clickButton.value;
     };
 
-    return { channelInfoList, loadingChannelInfo, extraInfo, loading, isShow, clickButton };
+    return {
+      channelInfoList,
+      loadingChannelInfo,
+      extraInfo,
+      loading,
+      isShow,
+      clickButton,
+    };
   },
 };
 </script>

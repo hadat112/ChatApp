@@ -141,7 +141,7 @@
               />
               <!-- msg-forward -->
               <msg-forward
-                v-if="item.msg_type == 'forward_message'"
+                v-if="item.msg_type == 'quote_message'"
                 :msgName="item.quote_message.sender.fullname"
                 :msgText="item.text"
                 :msgTime="item.quote_message.created_at"
@@ -276,8 +276,6 @@ export default {
     Channel,
   },
   setup() {
-    const route = useRoute();
-
     let {
       messageList,
       loading,
