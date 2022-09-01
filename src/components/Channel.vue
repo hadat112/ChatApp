@@ -24,7 +24,7 @@
                 :style="`background-image: url(${item.avatar})`"
               ></div>
               <div class="avatar-group" v-if="item.channel_type === 'group'">
-                <span class="channel-avatar avatar group">
+                <!-- <span class="channel-avatar avatar group">
                   <img
                     :src="`${item.group_images[0].avatar}`"
                     alt="avatar-channel"
@@ -35,7 +35,7 @@
                     :src="`${item.group_images[1].avatar}`"
                     alt="avatar-channel"
                   />
-                </span>
+                </span> -->
               </div>
             </div>
           </div>
@@ -70,10 +70,11 @@
                   v-if="item.last_message.text"
                   v-html="markedText(item.last_message.text)"
                 ></p>
-                <p
+                <!-- <p
                   v-else-if="
-                    item.last_message.attachments[0].ext === 'jpg' ||
-                    item.last_message.attachments[0].ext === 'png'
+                    item.last_message &&
+                    ( item.last_message.attachments[0].ext === 'jpg' ||
+                    item.last_message.attachments[0].ext === 'png')
                   "
                 >
                   <camera-filled /> ảnh
@@ -83,7 +84,7 @@
                     item.last_message.attachments[0].ext === 'mp4'"
                 >
                   <video-camera-filled /> video
-                </p>
+                </p> -->
               </div>
               
               <div class="channel-time">

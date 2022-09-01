@@ -11,9 +11,9 @@
       style="background: #fff; height: fit-content; padding: 0"
     >
       <a-page-header
-        v-if="channelInfoList.data.channel_type == 'direct'"
-        :title="`${channelInfoList.data.channel_name}`"
-        :sub-title="`${channelInfoList.data.partner.position_name}`"
+        v-if="channelInfoList && channelInfoList.channel_type == 'direct'"
+        :title="`${channelInfoList.channel_name}`"
+        :sub-title="`${channelInfoList.partner.position_name}`"
       >
         <template #extra>
           <button
@@ -30,9 +30,9 @@
         </template>
       </a-page-header>
       <a-page-header
-        v-if="channelInfoList.data.channel_type == 'group'"
-        :title="`${channelInfoList.data.channel_name}`"
-        :sub-title="`${channelInfoList.data.count_member} thành viên`"
+        v-if="channelInfoList && channelInfoList.channel_type == 'group'"
+        :title="`${channelInfoList.channel_name}`"
+        :sub-title="`${channelInfoList.count_member} thành viên`"
       >
         <template #extra>
           <button
@@ -156,12 +156,12 @@
     <!-- Typing message -->
     <div
       class="typing"
-      v-if="typingTest && channel_id === channelInfoList.data.channel_id"
+      v-if="typingTest && channel_id === channelInfoList.channel_id"
     >
       <div class="typing-avt-container">
         <div
           class="message-avt"
-          v-if="channelInfoList.data"
+          v-if="channelInfoList"
           :style="`background-image: url(${typingAvt})`"
         ></div>
       </div>
@@ -402,9 +402,9 @@ export default {
         !loadingMore.value
       ) {
         limit.value += 10;
-        await fetchMore();
+        await fetchMore({channel_id: currentChannel.value, limit: 40, before: messageList.value[messageList.value.length - 1].id});
         // console.log(messageList.value.length)
-        // console.log(limit.value)
+        console.log(limit.value)
       }
     }
 

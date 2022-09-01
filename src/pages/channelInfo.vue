@@ -1,20 +1,20 @@
 <template>
   <!-- chatinfor -->
   <div
-    v-if="channelInfoList.data"
+    v-if="channelInfoList"
     class="chat-info"
     style="width: 375px"
     :class="{ chatinfobtn: isShow, loading: loading || loadingChannelInfo }"
   >
     <div class="info-container" v-if="clickButton">
       <div class="info-block" style="width: 375px; height: 339px">
-        <div class="info-avatar" v-if="channelInfoList.data">
+        <div class="info-avatar" v-if="channelInfoList">
           <span
             class="individual-avatar"
-            v-if="channelInfoList.data.channel_type === 'direct'"
+            v-if="channelInfoList.channel_type === 'direct'"
           >
             <img
-              :src="`${channelInfoList.data.avatar}`"
+              :src="`${channelInfoList.avatar}`"
               alt="avatar"
               style="height: 163px; width: 375px"
             />
@@ -22,37 +22,42 @@
           <div class="group">
             <span
               class="group-avatar"
-              v-if="channelInfoList.data.channel_type === 'group'"
+              v-if="channelInfoList.channel_type === 'group'"
             >
               <img
-                :src="`${channelInfoList.data.group_images[0].avatar}`"
+                :src="`${channelInfoList.group_images[0].avatar}`"
                 alt="avatar"
                 style="height: 163px; width: 125px; flex: 1"
+                v-if="channelInfoList.group_images"
               />
               <img
-                :src="`${channelInfoList.data.group_images[1].avatar}`"
+                :src="`${channelInfoList.group_images[1].avatar}`"
                 alt="avatar"
                 style="height: 163px; width: 125px; flex: 1"
+                v-if="channelInfoList.group_images"
               />
               <img
-                :src="`${channelInfoList.data.group_images[2].avatar}`"
+                :src="`${channelInfoList.group_images[2].avatar}`"
                 alt="avatar"
                 style="height: 163px; width: 125px; flex: 1"
-                v-if="channelInfoList.data.count_member > 2"
+                v-if="
+                  channelInfoList.group_images &&
+                  channelInfoList.count_member > 2
+                "
               />
               <div
                 class="number_participants"
-                v-if="channelInfoList.data.count_member > 2"
+                v-if="channelInfoList.count_member > 2"
               >
-                +{{ channelInfoList.data.count_member - 3 }}
+                +{{ channelInfoList.count_member - 3 }}
               </div>
             </span>
           </div>
         </div>
         <div class="info-name">
-          <div class="info-name-title" v-if="channelInfoList.data">
+          <div class="info-name-title" v-if="channelInfoList">
             <span class="name">
-              {{ channelInfoList.data.channel_name }}
+              {{ channelInfoList.channel_name }}
             </span>
           </div>
           <div class="info-name-active">
@@ -65,7 +70,7 @@
         >
           <div
             class="short-act-info-icon"
-            v-if="channelInfoList.data.channel_type == 'direct' ? true : false"
+            v-if="channelInfoList.channel_type == 'direct' ? true : false"
           >
             <div class="short-act-info-block">
               <user-outlined class="user-outlined" @click="extraInfo" />
@@ -75,7 +80,7 @@
 
           <div
             class="short-act-info-icon"
-            v-if="channelInfoList.data.channel_type == 'group' ? true : false"
+            v-if="channelInfoList.channel_type == 'group' ? true : false"
           >
             <div class="short-act-info-block">
               <user-add-outlined class="user-outlined" @click="extraInfo" />
@@ -247,20 +252,20 @@
       <div class="info-container-block">
         <div class="sub-menu-item">
           <div class="sub-menu-item-left">Username</div>
-          <div class="sub-menu-item-right" v-if="channelInfoList.data">
-            {{ channelInfoList.data.partner.username }}
+          <div class="sub-menu-item-right" v-if="channelInfoList">
+            {{ channelInfoList.partner.username }}
           </div>
         </div>
         <div class="sub-menu-item">
           <div class="sub-menu-item-left">Vị trí</div>
-          <div class="sub-menu-item-right" v-if="channelInfoList.data">
-            {{ channelInfoList.data.partner.position_name }}
+          <div class="sub-menu-item-right" v-if="channelInfoList">
+            {{ channelInfoList.partner.position_name }}
           </div>
         </div>
         <div class="sub-menu-item">
           <div class="sub-menu-item-left">Kho</div>
-          <div class="sub-menu-item-right" v-if="channelInfoList.data">
-            {{ channelInfoList.data.partner.station_name }}
+          <div class="sub-menu-item-right" v-if="channelInfoList">
+            {{ channelInfoList.partner.station_name }}
           </div>
         </div>
       </div>
