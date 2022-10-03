@@ -1,5 +1,6 @@
 <template>
-  <component :is="layout">
+  <router-view />
+  <!-- <component :is="layout">
     <template #sider>
       <div class="header-channel-list">
         <div class="">
@@ -13,7 +14,7 @@
     <template #chat>
       <router-view></router-view>
     </template>
-  </component>
+  </component> -->
 </template>
 
 <script>
@@ -33,8 +34,6 @@ export default defineComponent({
       layout: "message",
     };
   },
-  setup() {
-    
-  },
+  setup() {},
 });
 </script>

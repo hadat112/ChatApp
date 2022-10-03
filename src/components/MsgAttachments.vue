@@ -1,7 +1,7 @@
 <template>
   <div class="message-attachments">
     <div
-      v-for="attachment in attachments"
+      v-for="attachment in props.attachments"
       :key="attachment.id"
       class="message-attachments-item"
     >
@@ -17,20 +17,13 @@
         alt=""
       />
       <video width="400" v-if="attachment.ext == 'mp4'" controls>
-        <source :src="`${attachment.url}`" type="video/mp4" />
+        <source :src="attachment.url" type="video/mp4" />
         Your browser does not support HTML video.
       </video>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-    props: {
-        ['attachments']: {type: Array}
-    },
-};
+<script setup>
+const props = defineProps({ attachments: Array });
 </script>
-
-<style>
-</style>

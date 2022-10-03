@@ -3,55 +3,12 @@
   <!-- chatview -->
   <div
     class="chat-view"
+    style="overflow: scroll"
     :class="{ loading: loading || loadingChannelInfo, w60: !isShow }"
+    @scroll.prevent="scrollHandle"
   >
-    <!-- header -->
-    <a-layout-header
-      v-if="!loadingChannelInfo"
-      style="background: #fff; height: fit-content; padding: 0"
-    >
-      <a-page-header
-        v-if="channelInfoList && channelInfoList.channel_type == 'direct'"
-        :title="`${channelInfoList.channel_name}`"
-        :sub-title="`${channelInfoList.partner.position_name}`"
-      >
-        <template #extra>
-          <button
-            @click="showInfo"
-            style="
-              background: #fff;
-              border: none;
-              outline: none;
-              cursor: pointer;
-            "
-          >
-            <ellipsis-outlined style="font-size: 28px; color: #a4a4a4" />
-          </button>
-        </template>
-      </a-page-header>
-      <a-page-header
-        v-if="channelInfoList && channelInfoList.channel_type == 'group'"
-        :title="`${channelInfoList.channel_name}`"
-        :sub-title="`${channelInfoList.count_member} thành viên`"
-      >
-        <template #extra>
-          <button
-            @click="showInfo"
-            style="
-              background: #fff;
-              border: none;
-              outline: none;
-              cursor: pointer;
-            "
-          >
-            <ellipsis-outlined style="font-size: 28px; color: #a4a4a4" />
-          </button>
-        </template>
-      </a-page-header>
-      <div class="channel-info-btn"></div>
-    </a-layout-header>
     <!-- content -->
-    <a-layout-content
+    <div
       id="layout-content"
       @scroll.prevent="scrollHandle"
       :class="{ stopScroll: loadingMore }"
@@ -88,11 +45,15 @@
           >
             <!-- msg avatar -->
             <msg-avt
-              :index = "index"
+              :index="index"
               :senderID="item.sender.id"
-              :prevSenderID="index ? messageList[messageList.length - index].sender.id : '0'"
+              :prevSenderID="
+                index ? messageList[messageList.length - index].sender.id : '0'
+              "
               :time="item.created_at"
-              :prevTime="index ? messageList[messageList.length - index].created_at : ''"
+              :prevTime="
+                index ? messageList[messageList.length - index].created_at : ''
+              "
               :avt="item.sender.avatar"
             />
             <!-- msg content -->
@@ -128,7 +89,10 @@
                 {{ item.sender.fullname }}
               </div>
               <!-- msg attachments -->
-              <msg-attachments :attachments="item.attachments" />
+              <msg-attachments
+                v-if="item.attachments"
+                :attachments="item.attachments"
+              />
               <!-- msg-text -->
               <div
                 v-if="item.text && item.msg_type == 'text'"
@@ -152,7 +116,7 @@
           </div>
         </div>
       </div>
-    </a-layout-content>
+    </div>
     <!-- Typing message -->
     <div
       class="typing"
@@ -173,272 +137,134 @@
         />
       </div>
     </div>
-    <!-- footer -->
-    <a-layout-footer>
-      <!-- msg-preview-img -->
-      <div class="footer-expand">
-        <div
-          class="footer-preview-img"
-          v-for="(item, index) in filesUrl"
-          :key="index"
-        >
-          <img :src="item" alt="" />
-          <span>
-            <!-- <a href="">
-              <eye-outlined />
-            </a> -->
-            <button class="delete-preview" @click="deletePreview(index)">
-              <delete-outlined />
-            </button>
-          </span>
-        </div>
-      </div>
-      <form @submit.prevent="sendMessageHandle">
-        <div class="footer-input">
-          <div class="message-more">
-            <ellipsis-outlined />
-          </div>
-
-          <div class="menu-footer">
-            <input
-              type="text"
-              placeholder="Nhập nội dung tin nhắn"
-              name=""
-              v-model="messageInput"
-              @keyup.enter.prevent="submit"
-            />
-            <div class="menu-footer-icon">
-              <input
-                type="file"
-                hidden="hidden"
-                ref="inputUpload"
-                multiple
-                @change="onFileSelected"
-              />
-              <button
-                type="button"
-                class="upload-img"
-                @click.prevent="$refs.inputUpload.click()"
-              >
-                <picture-filled />
-              </button>
-            </div>
-          </div>
-          <button
-            type="submit"
-            class="send-btn"
-            :class="{ active: messageInput || selectFiles[0] }"
-          >
-            <send-outlined />
-          </button>
-        </div>
-      </form>
-    </a-layout-footer>
   </div>
 
   <channel-info />
 </template>
 
-<script>
-import {
-  EllipsisOutlined,
-  SendOutlined,
-  MoreOutlined,
-  PictureFilled,
-  DeleteOutlined,
-  EyeOutlined,
-} from "@ant-design/icons-vue";
+<script setup>
 import { useMessageStore } from "../stores/message-list.js";
 import { useChannelInfoStore } from "../stores/channel-info.js";
 import { storeToRefs } from "pinia";
-import { useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
 import MsgForward from "../components/MsgForward.vue";
 import MsgAttachments from "../components/MsgAttachments.vue";
 import MsgTime from "../components/MsgTime.vue";
-import MsgAvt from "../components/MsgAvt.vue";
+import MsgAvt from "@/components/MsgAvt.vue";
 import ChannelInfo from "./channelInfo.vue";
-import Channel from "../components/Channel.vue";
 
-export default {
-  components: {
-    EllipsisOutlined,
-    SendOutlined,
-    MoreOutlined,
-    PictureFilled,
-    DeleteOutlined,
-    EyeOutlined,
-    MsgForward,
-    MsgAttachments,
-    MsgTime,
-    MsgAvt,
-    ChannelInfo,
-    Channel,
-  },
-  setup() {
-    let {
-      messageList,
-      loading,
-      loadingMore,
-      error,
-      limit,
-      currentChannel,
-      typingChannel,
-      channelList,
-      unread,
-      typingTest,
-    } = storeToRefs(useMessageStore());
+let {
+  messageList,
+  loading,
+  loadingMore,
+  limit,
+  currentChannel,
+  typingChannel,
+  channelList,
+  unread,
+  typingTest,
+} = storeToRefs(useMessageStore());
 
-    const { fetchMore, sendMessage, token } = useMessageStore();
-    const { channelInfoList, loadingChannelInfo, isShow } = storeToRefs(
-      useChannelInfoStore()
-    );
+const { fetchMore, token } = useMessageStore();
+const { channelInfoList, loadingChannelInfo, isShow } = storeToRefs(
+  useChannelInfoStore()
+);
 
-    let messageInput = ref("");
-    let selectFiles = ref([]);
-    const filesUrl = ref([]);
-    // let typingTest = ref(false);
-    let typingAvt = ref("");
-    let channel_id = ref("")
-    // currentChannel.value = route.params.id;
+let typingAvt = ref("");
+let channel_id = ref("");
+typingAvt.value = "";
 
-    channelList.value.forEach((index) => {
-      unread.value.push(0);
-    });
+channelList.value.forEach((index) => {
+  unread.value.push(0);
+});
 
-    typingAvt.value = "";
+const ws = new WebSocket(
+  `wss://ws.ghtk.vn/ws/chat?Authorization=${token}&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats`
+);
 
-    const ws = new WebSocket(
-      `wss://ws.ghtk.vn/ws/chat?Authorization=${token}&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats`
-    );
-
-    ws.onopen = function () {
-      ws.send(`${token}|sub|chats_user_6801990813180061667`);
-    };
-
-    onMounted(() => {
-      ws.onmessage = function (event) {
-        let message = JSON.parse(event.data);
-        console.log(message);
-        if (message.event === "message") {
-          typingTest.value = false;
-          const lastMsg = {
-            attachments: message.data.attachments,
-            channel_id: message.data.channel_id,
-            channel_mode: message.data.channel_mode,
-            channel_type: message.data.channel_type,
-            created_at: message.data.created_at,
-            id: message.data.id,
-            is_pin: message.data.is_pin,
-            msg_type: message.data.msg_type,
-            ref_id: message.data.ref_id,
-            score: message.data.score,
-            sender: message.data.sender,
-            status: message.data.status,
-            text: message.data.text,
-            total_seen: message.data.total_seen,
-          };
-
-          if (currentChannel.value === message.data.channel_id) {
-            messageList.value.unshift(lastMsg);
-          }
-
-          let scroll = document.querySelector("#layout-content");
-          scroll.scrollTop = 0;
-          // fetchNewMessage()
-          // fetchNewChannel();
-          channelList.value.forEach((channel, index) => {
-            if (channel.channel_id === message.data.channel_id) {
-              unread.value.unshift(unread.value.splice(index, 1)[0]);
-              channelList.value.unshift(channelList.value.splice(index, 1)[0]);
-              if (currentChannel.value != message.data.channel_id) {
-                unread.value[index]++;
-              }
-              channel.last_message = lastMsg;
-            }
-          });
-        } else if (message.event === "update_count_message_unread") {
-          channelList.value.forEach((channel, index) => {
-            if (channel.channel_id === message.data.channel_id) {
-              unread.value[index] = 0;
-            }
-          });
-        } else if (message.event === "typing") {
-          channel_id.value = message.data.channel_id;
-          typingChannel.value = channel_id.value;
-          if (currentChannel.value === message.data.channel_id) {
-            typingAvt.value = message.data.sender.avatar;
-            typingTest.value = true;
-          }
-          setTimeout(() => {
-            typingAvt.value = '';
-            typingTest.value = false;
-            channel_id.value = '';
-            typingChannel.value = channel_id.value;
-          }, 5000);
-        }
-        // console.log(typingTest.value);
-      };
-    });
-
-    function showInfo() {
-      isShow.value = !isShow.value;
-    }
-
-    async function sendMessageHandle() {
-      if ((messageInput.value || selectFiles.value) && currentChannel.value)
-        await sendMessage(messageInput.value, selectFiles.value);
-      messageInput.value = "";
-      selectFiles.value = [];
-      filesUrl.value = [];
-    }
-    async function scrollHandle(e) {
-      const { target } = e;
-      // console.log(Math.ceil(-target.scrollTop), target.scrollHeight - target.offsetHeight + 15);
-      if (
-        Math.ceil(-target.scrollTop) >=
-          Math.ceil(target.scrollHeight - target.offsetHeight + 15) &&
-        limit.value < 100 &&
-        !loadingMore.value
-      ) {
-        limit.value += 10;
-        await fetchMore({channel_id: currentChannel.value, limit: 40, before: messageList.value[messageList.value.length - 1].id});
-        // console.log(messageList.value.length)
-        console.log(limit.value)
-      }
-    }
-
-    function onFileSelected(e) {
-      Object.values(e.target.files).forEach((file) => {
-        selectFiles.value.push(file);
-        filesUrl.value.push(URL.createObjectURL(file));
-      });
-    }
-
-    function deletePreview(index) {
-      filesUrl.value.splice(index, 1);
-      selectFiles.value.splice(index, 1);
-    }
-    return {
-      messageList,
-      loading,
-      loadingMore,
-      loadingChannelInfo,
-      messageInput,
-      sendMessageHandle,
-      showInfo,
-      isShow,
-      scrollHandle,
-      onFileSelected,
-      filesUrl,
-      selectFiles,
-      channelInfoList,
-      deletePreview,
-      typingTest,
-      typingAvt,
-      channel_id,
-      currentChannel
-    };
-  },
+ws.onopen = function () {
+  ws.send(`${token}|sub|chats_user_6801990813180061667`);
 };
-</script>;
+
+onMounted(() => {
+  ws.onmessage = function (event) {
+    let message = JSON.parse(event.data);
+    if (message.event === "message") {
+      typingTest.value = false;
+      const lastMsg = {
+        attachments: message.data.attachments,
+        channel_id: message.data.channel_id,
+        channel_mode: message.data.channel_mode,
+        channel_type: message.data.channel_type,
+        created_at: message.data.created_at,
+        id: message.data.id,
+        is_pin: message.data.is_pin,
+        msg_type: message.data.msg_type,
+        ref_id: message.data.ref_id,
+        score: message.data.score,
+        sender: message.data.sender,
+        status: message.data.status,
+        text: message.data.text,
+        total_seen: message.data.total_seen,
+      };
+
+      if (currentChannel.value === message.data.channel_id) {
+        messageList.value.unshift(lastMsg);
+      }
+
+      let scroll = document.querySelector("#layout-content");
+      scroll.scrollTop = 0;
+      // fetchNewMessage()
+      // fetchNewChannel();
+      channelList.value.forEach((channel, index) => {
+        if (channel.channel_id === message.data.channel_id) {
+          unread.value.unshift(unread.value.splice(index, 1)[0]);
+          channelList.value.unshift(channelList.value.splice(index, 1)[0]);
+          if (currentChannel.value != message.data.channel_id) {
+            unread.value[index]++;
+          }
+          channel.last_message = lastMsg;
+        }
+      });
+    } else if (message.event === "update_count_message_unread") {
+      channelList.value.forEach((channel, index) => {
+        if (channel.channel_id === message.data.channel_id) {
+          unread.value[index] = 0;
+        }
+      });
+    } else if (message.event === "typing") {
+      channel_id.value = message.data.channel_id;
+      typingChannel.value = channel_id.value;
+      if (currentChannel.value === message.data.channel_id) {
+        typingAvt.value = message.data.sender.avatar;
+        typingTest.value = true;
+      }
+      setTimeout(() => {
+        typingAvt.value = "";
+        typingTest.value = false;
+        channel_id.value = "";
+        typingChannel.value = channel_id.value;
+      }, 5000);
+    }
+    // console.log(typingTest.value);
+  };
+});
+
+async function scrollHandle(e) {
+  const { target } = e;
+  if (
+    Math.ceil(-target.scrollTop) >=
+      Math.ceil(target.scrollHeight - target.offsetHeight + 15) &&
+    limit.value < 100 &&
+    !loadingMore.value
+  ) {
+    limit.value += 10;
+    await fetchMore({
+      channel_id: currentChannel.value,
+      limit: 40,
+      before: messageList.value[messageList.value.length - 1].id,
+    });
+  }
+}
+</script>
+;
