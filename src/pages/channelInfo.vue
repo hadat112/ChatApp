@@ -273,7 +273,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { storeToRefs } from "pinia";
 import { useChannelInfoStore } from "../stores/channel-info.js";
 import { useMessageStore } from "../stores/message-list.js";
@@ -295,44 +295,13 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons-vue";
 
-export default {
-  components: {
-    BellOutlined,
-    UserOutlined,
-    SearchOutlined,
-    FileImageOutlined,
-    ClockCircleOutlined,
-    RightOutlined,
-    MailOutlined,
-    MessageOutlined,
-    TeamOutlined,
-    TagOutlined,
-    PushpinOutlined,
-    SettingOutlined,
-    LeftOutlined,
-    UserAddOutlined,
-  },
-  setup() {
-    const { channelInfoList, loadingChannelInfo, isShow } = storeToRefs(
-      useChannelInfoStore()
-    );
-    const { loading } = storeToRefs(useMessageStore());
-    let clickButton = ref(true);
+const { channelInfoList, loadingChannelInfo, isShow } = storeToRefs(
+  useChannelInfoStore()
+);
+const { loading } = storeToRefs(useMessageStore());
+let clickButton = ref(true);
 
-    let extraInfo = () => {
-      clickButton.value = !clickButton.value;
-    };
-
-    return {
-      channelInfoList,
-      loadingChannelInfo,
-      extraInfo,
-      loading,
-      isShow,
-      clickButton,
-    };
-  },
+let extraInfo = () => {
+  clickButton.value = !clickButton.value;
 };
 </script>
-
-<style></style>

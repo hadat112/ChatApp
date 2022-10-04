@@ -9,7 +9,7 @@
       >
         <Header></Header>
       </a-layout-header>
-      <a-layout-content id="layout-content">
+      <a-layout-content style="display: flex; background: #fff" id="layout-content">
         <router-view />
       </a-layout-content>
       <a-layout-footer>

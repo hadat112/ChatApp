@@ -72,22 +72,22 @@
               }"
             >
               <!-- msg name -->
-              <div
-                v-if="
-                  item.sender.id != '6801990813180061667' &&
-                  (index == 0 ||
-                    item.sender.id !=
-                      messageList[messageList.length - index].sender.id ||
-                    new Date(item.created_at) -
-                      new Date(
-                        messageList[messageList.length - index].created_at
-                      ) >=
-                      1800000)
+              <msg-name
+                :index="index"
+                :senderID="item.sender.id"
+                :prevSenderID="
+                  index
+                    ? messageList[messageList.length - index].sender.id
+                    : '0'
                 "
-                class="message-sender"
-              >
-                {{ item.sender.fullname }}
-              </div>
+                :time="item.created_at"
+                :prevTime="
+                  index
+                    ? messageList[messageList.length - index].created_at
+                    : ''
+                "
+                :fullname="item.sender.fullname"
+              />
               <!-- msg attachments -->
               <msg-attachments
                 v-if="item.attachments"
@@ -138,7 +138,6 @@
       </div>
     </div>
   </div>
-
   <channel-info />
 </template>
 
@@ -147,12 +146,13 @@ import { useMessageStore } from "../stores/message-list.js";
 import { useChannelInfoStore } from "../stores/channel-info.js";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
+import { getToken } from '@/core/utils/helper.js'
 import MsgForward from "../components/MsgForward.vue";
 import MsgAttachments from "../components/MsgAttachments.vue";
 import MsgTime from "../components/MsgTime.vue";
 import MsgAvt from "@/components/MsgAvt.vue";
+import MsgName from "@/components/MsgName.vue";
 import ChannelInfo from "./channelInfo.vue";
-
 let {
   messageList,
   loading,
@@ -165,7 +165,7 @@ let {
   typingTest,
 } = storeToRefs(useMessageStore());
 
-const { fetchMore, token } = useMessageStore();
+const { fetchMore } = useMessageStore();
 const { channelInfoList, loadingChannelInfo, isShow } = storeToRefs(
   useChannelInfoStore()
 );
@@ -178,6 +178,7 @@ channelList.value.forEach((index) => {
   unread.value.push(0);
 });
 
+const token = getToken('token')
 const ws = new WebSocket(
   `wss://ws.ghtk.vn/ws/chat?Authorization=${token}&appType=gchat&appVersion=2022-07-29%2C02%3A14%3A08&device=web&deviceId=zhXaUEkd5S0zxjrNPScW&source=chats`
 );
@@ -267,4 +268,3 @@ async function scrollHandle(e) {
   }
 }
 </script>
-;
